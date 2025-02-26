@@ -15,6 +15,7 @@ function createLoginForm() {
     card.classList.add('card', 'p-3') 
     container.appendChild(card)
 
+    //create the login card in the center of the page.
     let cardBody = document.createElement('div')
     cardBody.classList.add('card-body')
     card.appendChild(cardBody)
@@ -33,6 +34,7 @@ function createLoginForm() {
     loginFormGroup.classList.add('form-group')
     loginForm.appendChild(loginFormGroup)
 
+    // create the Enter email input field
     let emailInput = document.createElement('input')
     emailInput.type = 'email'
     emailInput.id = 'emailInput'
@@ -40,6 +42,7 @@ function createLoginForm() {
     emailInput.placeholder = 'Email'
     loginFormGroup.appendChild(emailInput)
 
+    // create the Enter password input field
     let passwordInput = document.createElement('input')
     passwordInput.type = 'password'
     passwordInput.id = 'passwordInput'
@@ -47,6 +50,7 @@ function createLoginForm() {
     passwordInput.placeholder = 'Password'
     loginFormGroup.appendChild(passwordInput)
 
+    // create the Login button
     let loginButton = document.createElement('button')
     loginButton.type = 'submit'
     loginButton.id = 'loginButton'
@@ -57,6 +61,7 @@ function createLoginForm() {
     loginButton.addEventListener('click', handleLogin)
 }
 
+// handle the login here, need to check if email and password are correct from the database first though
 function handleLogin(e) {
     e.preventDefault()
     console.log('Login button clicked')
