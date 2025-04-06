@@ -65,4 +65,5 @@ function createLoginForm() {
 function handleLogin(e) {
     e.preventDefault()
     console.log('Login button clicked')
+    window.location.href = '/home.html'
 }
