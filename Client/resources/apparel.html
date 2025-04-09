@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Class Types</title>
-    <link rel="stylesheet" href="home.css">
+    <title>Apparel</title>
+    <link rel="stylesheet" href="styles/home.css">
     <style>
         * {
             margin: 0;
@@ -13,8 +13,30 @@
             font-family: Arial, sans-serif;
         }
         body {
-            background: rgb(154, 212, 241);          
+            background: rgb(154, 212, 241);
             height: 100vh;
+        }
+        section.main-content {
+            height: 100vh; /* Make the main content section take full viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://media.canva.com/v2/image-resize/format:JPG/height:452/quality:92/uri:ifs%3A%2F%2F%2F7f2b6810-fcb7-484b-bf09-091b52272a94/watermark:F/width:800?csig=AAAAAAAAAAAAAAAAAAAAACD_1pWLNBAIFFIwC4z02k9YJXhZ5q2tBvHWJZUr7DBs&exp=1744189760&osig=AAAAAAAAAAAAAAAAAAAAADZ-oSiliaVAx4qcCF6K9iAWWcH5VHJPJ4-uqJg0djJU&signer=media-rpc&x-canva-quality=screen') no-repeat center center/cover;
+            color: white;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        /* Image section below the main content */
+        section.image-section {
+            height: 100vh; /* Make the image section take full viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://media.canva.com/v2/image-resize/format:JPG/height:452/quality:92/uri:ifs%3A%2F%2F%2Fb5523c9d-49bd-4abc-aaa4-76fdf0f14990/watermark:F/width:800?csig=AAAAAAAAAAAAAAAAAAAAAJOO3CBLmaESA9Jv-CGLC-aKtRju2EY8tIN5ynQtwYfI&exp=1744192384&osig=AAAAAAAAAAAAAAAAAAAAABAzXNHehSaNoZwSUqfQ2-FTcQarnR0wkYSIusFBwOFe&signer=media-rpc&x-canva-quality=screen') no-repeat center center/cover;
+            color: white;
+            text-align: center;
+            font-size: 2rem;
         }
         .navbar {
             width: 100%;
@@ -27,7 +49,7 @@
             top: 0;
             box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
         }
-        
+
         /*dropdown menu*/
         .menu-btn {
             background: none;
@@ -94,41 +116,7 @@
             display: block;
         }
 
-        /* hero section */
-        .hero {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            text-align: center;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-        }
-        .hero h1 {
-            font-size: 50px;
-            font-weight: bold;
-        }
-        .hero p {
-            font-size: 22px;
-            margin-top: 10px;
-        }
-        .buttons {
-            margin-top: 20px;
-        }
-        .btn {
-            padding: 12px 24px;
-            font-size: 18px;
-            background: white;
-            color: black;
-            border: none;
-            cursor: pointer;
-            margin: 5px;
-            border-radius: 5px;
-        }
-        .btn:hover {
-            background: #ddd;
-        }
+        
     </style>
 </head>
 <body>
@@ -150,7 +138,7 @@
             </div>
         </div>
 
-        <div class="logo">Class Types</div>
+        <div class="logo">Apparel</div>
 
         <!-- right profile dropdown -->
         <div class="profile">
@@ -162,6 +150,15 @@
             </div>
         </div>
     </div>
+<!-- Main content section -->
+<section class="main-content">
+</section>
+
+<!-- Image section below the main content -->
+<section class="image-section">
+</section>
+   
+    
 
 </body>
 </html>
