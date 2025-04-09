@@ -1,3 +1,8 @@
+using API;
+
+// Run database test
+await DatabaseTest.RunTest();
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

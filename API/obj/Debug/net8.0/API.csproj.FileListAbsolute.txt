@@ -31,3 +31,6 @@
 /Users/creightonfowler/Documents/MIS Programs/Spring2025/groupproject/MIS321-Group-Project/API/obj/Debug/net8.0/API.pdb
 /Users/creightonfowler/Documents/MIS Programs/Spring2025/groupproject/MIS321-Group-Project/API/obj/Debug/net8.0/API.genruntimeconfig.cache
 /Users/creightonfowler/Documents/MIS Programs/Spring2025/groupproject/MIS321-Group-Project/API/obj/Debug/net8.0/ref/API.dll
+/Users/creightonfowler/Documents/MIS Programs/Spring2025/groupproject/MIS321-Group-Project/API/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+/Users/creightonfowler/Documents/MIS Programs/Spring2025/groupproject/MIS321-Group-Project/API/bin/Debug/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
+/Users/creightonfowler/Documents/MIS Programs/Spring2025/groupproject/MIS321-Group-Project/API/bin/Debug/net8.0/MySqlConnector.dll
