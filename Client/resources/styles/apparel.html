@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lengendary Training Services</title>
+    <title>Apparel</title>
     <link rel="stylesheet" href="home.css">
     <style>
         * {
@@ -13,8 +13,30 @@
             font-family: Arial, sans-serif;
         }
         body {
-            background: url('https://th.bing.com/th/id/R.912e5da0eeb7a401e4a6c3c40db9ebaa?rik=u6X%2f7cInqYW9nw&riu=http%3a%2f%2feverydaydogmagazine.com%2fwp-content%2fuploads%2f2018%2f04%2fdogtraining.jpg&ehk=ef2%2bMxXTQUrTL0%2bXzHE4%2fym3%2fGB%2fPmwzwz%2f7w0RoxsE%3d&risl=&pid=ImgRaw&r=0') no-repeat center center/cover;
+            background: rgb(154, 212, 241);
             height: 100vh;
+        }
+        section.main-content {
+            height: 100vh; /* Make the main content section take full viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://media.canva.com/v2/image-resize/format:JPG/height:452/quality:92/uri:ifs%3A%2F%2F%2F7f2b6810-fcb7-484b-bf09-091b52272a94/watermark:F/width:800?csig=AAAAAAAAAAAAAAAAAAAAACD_1pWLNBAIFFIwC4z02k9YJXhZ5q2tBvHWJZUr7DBs&exp=1744189760&osig=AAAAAAAAAAAAAAAAAAAAADZ-oSiliaVAx4qcCF6K9iAWWcH5VHJPJ4-uqJg0djJU&signer=media-rpc&x-canva-quality=screen') no-repeat center center/cover;
+            color: white;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        /* Image section below the main content */
+        section.image-section {
+            height: 100vh; /* Make the image section take full viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://media.canva.com/v2/image-resize/format:JPG/height:452/quality:92/uri:ifs%3A%2F%2F%2Fb5523c9d-49bd-4abc-aaa4-76fdf0f14990/watermark:F/width:800?csig=AAAAAAAAAAAAAAAAAAAAAJOO3CBLmaESA9Jv-CGLC-aKtRju2EY8tIN5ynQtwYfI&exp=1744192384&osig=AAAAAAAAAAAAAAAAAAAAABAzXNHehSaNoZwSUqfQ2-FTcQarnR0wkYSIusFBwOFe&signer=media-rpc&x-canva-quality=screen') no-repeat center center/cover;
+            color: white;
+            text-align: center;
+            font-size: 2rem;
         }
         .navbar {
             width: 100%;
@@ -27,7 +49,7 @@
             top: 0;
             box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
         }
-        
+
         /*dropdown menu*/
         .menu-btn {
             background: none;
@@ -94,41 +116,7 @@
             display: block;
         }
 
-        /* hero section */
-        .hero {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            text-align: center;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-        }
-        .hero h1 {
-            font-size: 50px;
-            font-weight: bold;
-        }
-        .hero p {
-            font-size: 22px;
-            margin-top: 10px;
-        }
-        .buttons {
-            margin-top: 20px;
-        }
-        .btn {
-            padding: 12px 24px;
-            font-size: 18px;
-            background: white;
-            color: black;
-            border: none;
-            cursor: pointer;
-            margin: 5px;
-            border-radius: 5px;
-        }
-        .btn:hover {
-            background: #ddd;
-        }
+        
     </style>
 </head>
 <body>
@@ -150,7 +138,7 @@
             </div>
         </div>
 
-        <div class="logo">Legendary Training Services</div>
+        <div class="logo">Apparel</div>
 
         <!-- right profile dropdown -->
         <div class="profile">
@@ -162,51 +150,15 @@
             </div>
         </div>
     </div>
+<!-- Main content section -->
+<section class="main-content">
+</section>
 
-    <div class="hero">
-        <h1>Unleash the legend in your pet!</h1>
-        <p>Book your session now!</p>
-        <div class="buttons">
-            <a href="login.html"><button class="btn btn-primary">Login</button></a>
-
-            <a href="createacc.html"><button class="btn btn-primary">Create Account</button></a>
-        </div>
-    </div>
+<!-- Image section below the main content -->
+<section class="image-section">
+</section>
+   
     
-        <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Row</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-</head>
-<body>
-  <div class="container my-5">
-    <div class="row text-center">
-      <!-- Image 1 -->
-      <div class="col-md-4">
-        <img src="https://www.leaderdog.org/wp-content/uploads/2016/05/17LDFB9011-4v1-BlogImages_Tips-on-training-your-new-puppy.jpg" class="img-fluid mb-2 rounded" alt="Class 1">
-        <h5>Our Story</h5>
-        <p>Teach your dog basic commands and manners.</p>
-      </div>
 
-      <!-- Image 2 -->
-      <div class="col-md-4">
-        <img src="https://th.bing.com/th/id/R.5875aca1bc957bf0cfaf72d7fc87120e?rik=0v6GF9hBa%2b7KKA&riu=http%3a%2f%2fhoundswithhannah.co.uk%2fwp-content%2fuploads%2f2019%2f07%2fIMG_7194.jpg&ehk=0kXE%2fehUO3q2yQfGE7oefR1XKYCKjtfCfgd86xNtFr8%3d&risl=&pid=ImgRaw&r=0" class="img-fluid mb-2 rounded" alt="Class 3">
-        <h5>Our Trainers</h5>
-        <p>Help your puppy learn housetraining and socialization.</p>
-      </div>
-
-      <!-- Image 3 -->
-      <div class="col-md-4">
-        <img src="https://media.istockphoto.com/photos/fitness-dog-picture-id500740407?k=6&m=500740407&s=612x612&w=0&h=tRjG1MBR4-St1CEKenkmP4iRqAJbHSw5FR0ZcOQElJ0=" class="img-fluid mb-2 rounded" alt="Class 3">
-        <h5>Our Programs</h5>
-        <p>Support dogs trained for psychiatric disabilities.</p>
-      </div>
-    </div>
-  </div>
-</body>
-</html>
 </body>
 </html>
