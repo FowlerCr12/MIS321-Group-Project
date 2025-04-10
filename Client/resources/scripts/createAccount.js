@@ -1,11 +1,17 @@
 let app = document.getElementById('app')
+let errorModal
 
 function handleOnLoad() {
-    createLoginForm()
+    createAccountForm()
+    // Initialize error modal
+    errorModal = new PopupModal({
+        title: 'Error',
+        type: 'error',
+        modalId: 'createAccountError'
+    })
 }
 
-
-function createLoginForm() {
+function createAccountForm() {
     let container = document.createElement('div')
     container.id = 'loginContainer'
     container.classList.add('container', 'd-flex', 'justify-content-center', 'align-items-center', 'vh-100')
@@ -36,32 +42,36 @@ function createLoginForm() {
 
     // create the First Name input field
     let firstNameInput = document.createElement('input')
-    firstNameInput.type = 'email'
+    firstNameInput.type = 'text'
     firstNameInput.id = 'firstNameInput'
-    firstNameInput.classList.add('form-control', 'mb-3')
+    firstNameInput.classList.add('form-control', 'mb-3', 'required')
+    firstNameInput.required = true
     firstNameInput.placeholder = 'First Name'
     createAccountFormGroup.appendChild(firstNameInput)
 
     //create the last name input field
     let lastNameInput = document.createElement('input')
-    lastNameInput.type = 'email'
+    lastNameInput.type = 'text'
     lastNameInput.id = 'lastNameInput'
-    lastNameInput.classList.add('form-control', 'mb-3')
+    lastNameInput.classList.add('form-control', 'mb-3', 'required')
     lastNameInput.placeholder = 'Last Name'
+    lastNameInput.required = true
     createAccountFormGroup.appendChild(lastNameInput)
 
     // create the pet name input field
     let petNameInput = document.createElement('input')
-    petNameInput.type = 'email'
+    petNameInput.type = 'text'
     petNameInput.id = 'petNameInput'
-    petNameInput.classList.add('form-control', 'mb-3')
+    petNameInput.classList.add('form-control', 'mb-3', 'required')
     petNameInput.placeholder = 'Pet Name'
+    petNameInput.required = true
     createAccountFormGroup.appendChild(petNameInput)
 
     // create the pet type input dropdown
     let petTypeSelect = document.createElement('select')
     petTypeSelect.id = 'petTypeSelect'
-    petTypeSelect.classList.add('form-control', 'mb-3')
+    petTypeSelect.classList.add('form-control', 'mb-3', 'required')
+    petTypeSelect.required = true
     createAccountFormGroup.appendChild(petTypeSelect)
 
     let defaultPetOption = document.createElement('option')
@@ -85,7 +95,8 @@ function createLoginForm() {
     // create the pet age drop down
     let petAgeSelect = document.createElement('select')
     petAgeSelect.id = 'petAgeSelect'
-    petAgeSelect.classList.add('form-control', 'mb-3')
+    petAgeSelect.classList.add('form-control', 'mb-3', 'required')
+    petAgeSelect.required = true
     createAccountFormGroup.appendChild(petAgeSelect)
     
     let defaultOption = document.createElement('option')
@@ -108,16 +119,18 @@ function createLoginForm() {
     let emailInput = document.createElement('input')
     emailInput.type = 'email'
     emailInput.id = 'emailInput'
-    emailInput.classList.add('form-control', 'mb-3')
+    emailInput.classList.add('form-control', 'mb-3', 'required')
     emailInput.placeholder = 'Email'
+    emailInput.required = true
     createAccountFormGroup.appendChild(emailInput)
 
     // create the Enter password input field
     let passwordInput = document.createElement('input')
     passwordInput.type = 'password'
     passwordInput.id = 'passwordInput'
-    passwordInput.classList.add('form-control')
+    passwordInput.classList.add('form-control', 'required')
     passwordInput.placeholder = 'Password'
+    passwordInput.required = true
     createAccountFormGroup.appendChild(passwordInput)
 
     // create the Login button
@@ -132,8 +145,45 @@ function createLoginForm() {
 }
 
 // handle the create account here
-function handleCreateAccount(e) {
+async function handleCreateAccount(e) {
     e.preventDefault()
-    console.log('Create Account Button Clicked')
-    window.location.href = '/home.html'
+    
+    // Get form values
+    const firstName = document.getElementById('firstNameInput').value
+    const lastName = document.getElementById('lastNameInput').value
+    const email = document.getElementById('emailInput').value
+    const password = document.getElementById('passwordInput').value
+    
+    // Combine first and last name for userName
+    const userName = `${firstName} ${lastName}`
+    
+    // Create user object
+    const userData = {
+        userEmail: email,
+        userName: userName,
+        userPassword: password,
+        userPayment: null // This can be updated later if needed
+    }
+
+    try {
+        // Send POST request to API
+        const response = await fetch('http://localhost:5043/api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData)
+        })
+
+        if (response.ok) {
+            console.log('Account created successfully')
+            window.location.href = './home.html'
+        } else {
+            console.error('Failed to create account')
+            errorModal.show('Failed to create account. Please try again.')
+        }
+    } catch (error) {
+        console.error('Error:', error)
+        errorModal.show('An error occurred while creating your account. Please try again.')
+    }
 }
