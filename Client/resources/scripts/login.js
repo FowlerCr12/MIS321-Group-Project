@@ -1,7 +1,13 @@
 let app = document.getElementById('app')
+let errorModal
 
 function handleOnLoad() {
     createLoginForm()
+    errorModal = new PopupModal({ // instantiates the popupmodal for when the login is not correct. 
+        title: 'Error',
+        type: 'error',
+        modalId: 'loginError'
+    })
 }
 
 
@@ -61,9 +67,35 @@ function createLoginForm() {
     loginButton.addEventListener('click', handleLogin)
 }
 
-// handle the login here, need to check if email and password are correct from the database first though
-function handleLogin(e) {
+// handle the login here
+async function handleLogin(e) {
     e.preventDefault()
-    console.log('Login button clicked')
-    window.location.href = '/home.html'
+    
+    const email = document.getElementById('emailInput').value
+    const password = document.getElementById('passwordInput').value
+
+
+    try {
+        const response = await fetch('http://localhost:5043/api/users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password })
+        })
+
+        const data = await response.json()
+
+        if (data.success) {
+            // Store user data in localStorage
+            localStorage.setItem('user', JSON.stringify(data.user))
+            // Redirect to home page
+            window.location.href = './home.html'
+        } else {
+            errorModal.show('Invalid email or password')
+        }
+    } catch (error) {
+        console.error('Error:', error)
+        errorModal.show('An error occurred while logging in')
+    }
 }

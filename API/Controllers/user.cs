@@ -51,5 +51,58 @@ namespace API.Controllers
             Database myDatabase = new();
             await myDatabase.UpdateUser(value, id); // updates the shop in the database
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        {
+            try
+            {
+                Database myDatabase = new(); // creates the database class
+                var users = await myDatabase.GetAllUsers(); // gets all of the users from the database
+                
+                User user = null;
+                for(int i = 0; i < users.Count; i++) // loops thorugh the array of users to find if any of them match the provided email and password in the login form. 
+                {
+                    if(users[i].userEmail.ToLower() == request.Email.ToLower() && users[i].userPassword == request.Password)
+                    {
+                        user = users[i];
+                        break;
+                    }
+                }
+
+                if (user != null) // makes sure the user is found then returns the User back with the information below. 
+                {
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        user = new{
+                            id = user.userID,
+                            email = user.userEmail,
+                            name = user.userName
+                        }
+                    });
+                }
+                return new JsonResult(new // returns this json message if the password or email did not match.
+                {
+                    success = false,
+                    message = "Invalid email or password"
+                });
+                
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = "An error occured. Please try again."
+                });
+            }
+        }
+    }
+
+    public class LoginRequest
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
     }
 }
