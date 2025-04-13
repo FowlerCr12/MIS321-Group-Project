@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("scheduleGridContainer");
+    let errorModal
 
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const timeSlots = ["09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM"];
@@ -65,7 +66,12 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .catch(err => {
             console.error("Failed to load schedule", err);
-            container.innerHTML = "<p class='text-danger fw-bold'>Error loading class schedule.</p>";
+            errorModal = new PopupModal({ // instantiates the popupmodal for when the login is not correct. 
+                title: 'Error',
+                type: 'error',
+                modalId: 'scheduleLoadError'
+            })
+            errorModal.show('The schedule failed to load. Please try again later.')
         });
 });
 
