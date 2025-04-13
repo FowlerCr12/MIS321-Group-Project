@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    fetch("") // Add API path
+    fetch("http://localhost:5043") // API path 
         .then(response => response.json())
         .then(data => {
             const tableBody = document.querySelector("#scheduleTable tbody");
