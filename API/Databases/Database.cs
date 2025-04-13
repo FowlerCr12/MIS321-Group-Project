@@ -136,12 +136,12 @@ namespace API.Databases
                 allClasses.Add(new Class() // adds the class to the list
                 {
                     classID = reader.GetInt32(0),
-                    classTime = reader.IsDBNull(1) ? null : reader.GetString(1),
-                    classDate = reader.IsDBNull(2) ? null : reader.GetString(2),
+                    classTime = reader.IsDBNull(1) ? null : reader.GetTimeSpan(1),
+                    classDate = reader.IsDBNull(2) ? null : reader.GetDateTime(2),
                     classType = reader.IsDBNull(3) ? null : reader.GetString(3),
                     className = reader.IsDBNull(4) ? null : reader.GetString(4),
-                    classCapacity = reader.IsDBNull(5) ? null : reader.GetString(5),
-                    classAllowedPetTypes = reader.IsDBNull(5) ? null : reader.GetString(5)
+                    classCapacity = reader.IsDBNull(5) ? null : reader.GetInt32(5),
+                    classAllowedPetTypes = reader.IsDBNull(6) ? null : reader.GetString(6)
                 });
             }
 
@@ -166,7 +166,7 @@ namespace API.Databases
 
         public async Task<List<Class>> GetAllClasses() // gets all of the shops from the database
         {
-            string sql = "SELECT * FROM Class where deleted != 'Y'"; // the SQL query that is used to get the information from the database
+            string sql = "SELECT * FROM class where deleted != 'Y'"; // the SQL query that is used to get the information from the database
             List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
             return await SelectClasses(sql, parms);
 

@@ -14,20 +14,20 @@ namespace API
                 var db = new Database();
                 
                 // Get all users
-                var users = await db.GetAllUsers();
+                var classes = await db.GetAllClasses();
                 
                 Console.WriteLine("\nAll Users in Database:");
                 Console.WriteLine("---------------------");
-                foreach (var user in users)
+                foreach (var user in classes)
                 {
-                    Console.WriteLine($"ID: {user.userID}");
-                    Console.WriteLine($"Name: {user.userName}");
-                    Console.WriteLine($"Email: {user.userEmail}");
-                    Console.WriteLine($"Payment: {user.userPayment}");
+                    Console.WriteLine($"ID: {user.classID}");
+                    Console.WriteLine($"Name: {user.className}");
+                    Console.WriteLine($"Email: {user.classTime}");
+                    Console.WriteLine($"Payment: {user.classCapacity}");
                     Console.WriteLine("---------------------");
                 }
                 
-                Console.WriteLine($"\nTotal Users Found: {users.Count}");
+                Console.WriteLine($"\nTotal Classes Found: {classes.Count}");
             }
             catch (Exception ex)
             {
