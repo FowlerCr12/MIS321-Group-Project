@@ -55,4 +55,23 @@
     <script src="./scripts/schedule.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
+<!-- Info Modal -->
+<div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="infoModalLabel">Class Info</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Trainer:</strong> <span id="modalTrainer"></span></p>
+          <p><strong>Date:</strong> <span id="modalDate"></span></p>
+          <p><strong>Time:</strong> <span id="modalTime"></span></p>
+          <p><strong>Location:</strong> <span id="modalLocation"></span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 </html>
