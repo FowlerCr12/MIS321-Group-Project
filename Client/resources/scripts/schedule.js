@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     container.innerHTML = tableHTML;
 
-    fetch("http://localhost:5000/api/schedule")
+    fetch("http://localhost:5043") // API path
         .then(res => res.json())
         .then(data => {
             data.forEach((session, index) => {
