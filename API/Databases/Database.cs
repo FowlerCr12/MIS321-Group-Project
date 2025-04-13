@@ -208,7 +208,7 @@ namespace API.Databases
             //parms.Add(new MySqlParameter("@userPassword", myUser.userPassword) { Value = myUser.userPassword }); // adds the userPassword to the list of parameters
             //parms.Add(new MySqlParameter("@userPayment", myUser.userPayment) { Value = myUser.userPayment }); // adds the userPayment to the list of parameters
             //parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
-            await UsersNoReturnSql(sql, parms); // calls the UsersNoReturnSql function to update the shop in the database
+            await ClassesNoReturnSql(sql, parms); // calls the UsersNoReturnSql function to update the shop in the database
         }
     }
 }
