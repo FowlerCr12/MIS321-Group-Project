@@ -1,0 +1,45 @@
+/* Schedule Table Styles */
+.schedule-table {
+    font-size: 0.85rem;
+}
+
+.schedule-table td, .schedule-table th {
+    padding: 0.35rem;
+}
+
+.schedule-table .time-column {
+    width: 85px;
+    white-space: nowrap;
+}
+
+.schedule-table td {
+    height: 60px;
+    vertical-align: middle;
+}
+
+.schedule-table .p-2 {
+    padding: 0.25rem !important;
+}
+
+.schedule-table .btn-sm {
+    padding: 0.1rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+@media (max-width: 768px) {
+    .schedule-table {
+        font-size: 0.75rem;
+    }
+    
+    .schedule-table td, .schedule-table th {
+        padding: 0.25rem;
+    }
+    
+    .schedule-table .time-column {
+        width: 70px;
+    }
+
+    .schedule-table td {
+        height: 50px;
+    }
+} 
