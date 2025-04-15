@@ -75,7 +75,7 @@ namespace API.Databases
             return await SelectUsers(sql, parms);
         }
 
-        public async Task InsertShop(User myUser) // inserts a new shop into the database
+        public async Task InsertUser(User myUser) // inserts a new user into the database
         {
             string sql = "INSERT INTO user (userEmail, userName, userPassword, userPayment) VALUES (@userEmail, @userName, @userPassword, @userPayment)"; // the SQL query that is used to insert the information into the database
             List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
