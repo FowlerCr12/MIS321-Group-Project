@@ -94,41 +94,29 @@
             display: block;
         }
 
-        /* hero section */
-        .hero {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            text-align: center;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-        }
-        .hero h1 {
-            font-size: 50px;
-            font-weight: bold;
-        }
-        .hero p {
-            font-size: 22px;
-            margin-top: 10px;
-        }
-        .buttons {
-            margin-top: 20px;
-        }
-        .btn {
-            padding: 12px 24px;
-            font-size: 18px;
-            background: white;
-            color: black;
-            border: none;
-            cursor: pointer;
-            margin: 5px;
-            border-radius: 5px;
-        }
-        .btn:hover {
-            background: #ddd;
-        }
+        .faq-container {
+    margin: 140px auto 40px auto;
+    max-width: 800px;
+    padding: 30px 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    min-height: 80vh; /* Stretch vertically */
+}
+
+.faq {
+    margin-bottom: 25px;
+}
+
+.faq h3 {
+    color: #1f3d5a;
+    margin-bottom: 8px;
+}
+
+.faq p {
+    margin-left: 15px;
+}
+
     </style>
 </head>
 <body>
@@ -163,5 +151,36 @@
         </div>
     </div>
 
+    <div class="faq-container">
+        <div class="faq">
+            <h3>1. What types of pets do you train?</h3>
+            <p>We specialize in training dogs and cats of all breeds and ages. If you have another type of pet, feel free to contact us to see how we can help.</p>
+        </div>
+        <div class="faq">
+            <h3>2. What training methods do you use?</h3>
+            <p>Our approach is based on positive reinforcement. We focus on rewarding good behavior to build trust, confidence, and lasting results.There are no harsh techniques involved.</p>
+        </div>
+        <div class="faq">
+            <h3>3. Do you offer private or group sessions?</h3>
+            <p>Yes! We offer both private one-on-one sessions and small group classes to suit different learning needs and schedules.</p>
+        </div>
+        <div class="faq">
+            <h3>4. How long does it take to see results?</h3>
+            <p>While every pet is different, many owners start to see progress after just a few sessions. Continued practice at home plays a big role in long-term success.</p>
+        </div>
+        <div class="faq">
+            <h3>5. Can you help with specific behavior problems?</h3>
+            <p>Definitely. We handle issues like excessive barking, jumping, leash reactivity, aggression, house training, and more.</p>
+        </div>
+        <div class="faq">
+            <h3>6. What should I bring to a training session?</h3>
+            <p>Bring your pet on a leash or harness, some treats, and any questions you have. For group classes, a towel or mat is helpful too.</p>
+        </div>
+        <div class="faq">
+            <h3>7. Do you offer training virtually or only at your facility?</h3>
+            <p>We only offer on-site training options!</p>
+        </div>
+    </div>
+    
 </body>
 </html>
