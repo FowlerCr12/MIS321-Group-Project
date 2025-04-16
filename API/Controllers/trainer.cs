@@ -3,35 +3,37 @@ using Microsoft.AspNetCore.Mvc;
 using API.Models; // adds connection so that it knows what "Book" is
 //using API.Models.Interfaces; // adds so it knows what IGetAllBooks is
 using API.Databases;
+
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+
+    public class TrainersController : ControllerBase
     {
         // GET: api/<shops>
         [HttpGet] // gets all of the shops from the database
-        public async Task<List<User>> Get()
+        public async Task<List<Trainer>> Get()
         {
             Database myDatabase = new();
-            return await myDatabase.GetAllUsers();
+            return await myDatabase.GetAllTrainers();
         }
 
         // GET: api/shops/id
         [HttpGet("{id}")] // gets a shop from the database bu the id of the shop
-        public async Task<User> Get(int id)
+        public async Task<Trainer> Get(int id)
         {
             Database myDatabase = new();
-            return (await myDatabase.GetUser(id)).FirstOrDefault();
+            return (await myDatabase.GetTrainer(id)).FirstOrDefault();
         }
 
         // POST api/<shops>
         [HttpPost] // adds a new shop to the database
-        public async Task Post([FromBody] User value)
+        public async Task Post([FromBody] Trainer value)
         {
-            Console.WriteLine(value.userName);
+            Console.WriteLine(value.trainerName);
             Database myDatabase = new();
-            await myDatabase.InsertUser(value);
+            await myDatabase.InsertTrainer(value);
         }
 
 
@@ -40,16 +42,16 @@ namespace API.Controllers
         public async Task Delete(int id)
         {
             Database myDatabase = new();
-            await myDatabase.DeleteUser(id);
+            await myDatabase.DeleteTrainer(id);
             Console.WriteLine(id); // prints the id for denbugging purposes
         }
 
         [HttpPut("{id}")] // updates a shop in the database
-        public async Task Put(int id, [FromBody] User value)
+        public async Task Put(int id, [FromBody] Trainer value)
         {
-            Console.WriteLine(value.userName); // prints the shopname to the console for testing or debugging
+            Console.WriteLine(value.trainerName); // prints the shopname to the console for testing or debugging
             Database myDatabase = new();
-            await myDatabase.UpdateUser(value, id); // updates the shop in the database
+            await myDatabase.UpdateTrainer(value, id); // updates the shop in the database
         }
 
         [HttpPost("login")]
@@ -58,27 +60,28 @@ namespace API.Controllers
             try
             {
                 Database myDatabase = new(); // creates the database class
-                var users = await myDatabase.GetAllUsers(); // gets all of the users from the database
-                
-                User user = null;
-                for(int i = 0; i < users.Count; i++) // loops thorugh the array of users to find if any of them match the provided email and password in the login form. 
+                var trainers = await myDatabase.GetAllTrainers(); // gets all of the admins from the database
+
+                Trainer trainer = null;
+                for (int i = 0; i < trainers.Count; i++) // loops thorugh the array of users to find if any of them match the provided email and password in the login form. 
                 {
-                    if(users[i].userEmail.ToLower() == request.Email.ToLower() && users[i].userPassword == request.Password)
+                    if (trainers[i].trainerEmail.ToLower() == request.Email.ToLower() && trainers[i].trainerPassword == request.Password)
                     {
-                        user = users[i];
+                        trainer = trainers[i];
                         break;
                     }
                 }
 
-                if (user != null) // makes sure the user is found then returns the User back with the information below. 
+                if (trainer != null) // makes sure the user is found then returns the User back with the information below. 
                 {
                     return new JsonResult(new
                     {
                         success = true,
-                        user = new{
-                            id = user.userID,
-                            email = user.userEmail,
-                            name = user.userName
+                        trainer = new
+                        {
+                            id = trainer.trainerID,
+                            email = trainer.trainerEmail,
+                            name = trainer.trainerName
                         }
                     });
                 }
@@ -87,7 +90,7 @@ namespace API.Controllers
                     success = false,
                     message = "Invalid email or password"
                 });
-                
+
             }
             catch (Exception ex)
             {
@@ -100,7 +103,7 @@ namespace API.Controllers
         }
     }
 
-    public class LoginRequest
+    public class LoginRequestTrainer
     {
         public string Email { get; set; }
         public string Password { get; set; }
