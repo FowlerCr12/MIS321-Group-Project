@@ -6,34 +6,34 @@ using API.Databases;
 
 namespace API.Controllers
 {
-        [Route("api/[controller]")]
-        [ApiController]
+    [Route("api/[controller]")]
+    [ApiController]
 
-    public class AdminsController : ControllerBase
+    public class TrainersController : ControllerBase
     {
         // GET: api/<shops>
         [HttpGet] // gets all of the shops from the database
-        public async Task<List<Admin>> Get()
+        public async Task<List<Trainer>> Get()
         {
             Database myDatabase = new();
-            return await myDatabase.GetAllAdmins();
+            return await myDatabase.GetAllTrainers();
         }
 
         // GET: api/shops/id
         [HttpGet("{id}")] // gets a shop from the database bu the id of the shop
-        public async Task<Admin> Get(int id)
+        public async Task<Trainer> Get(int id)
         {
             Database myDatabase = new();
-            return (await myDatabase.GetAdmin(id)).FirstOrDefault();
+            return (await myDatabase.GetTrainer(id)).FirstOrDefault();
         }
 
         // POST api/<shops>
         [HttpPost] // adds a new shop to the database
-        public async Task Post([FromBody] Admin value)
+        public async Task Post([FromBody] Trainer value)
         {
-            Console.WriteLine(value.adminName);
+            Console.WriteLine(value.trainerName);
             Database myDatabase = new();
-            await myDatabase.InsertAdmin(value);
+            await myDatabase.InsertTrainer(value);
         }
 
 
@@ -42,49 +42,46 @@ namespace API.Controllers
         public async Task Delete(int id)
         {
             Database myDatabase = new();
-            await myDatabase.DeleteAdmin(id);
+            await myDatabase.DeleteTrainer(id);
             Console.WriteLine(id); // prints the id for denbugging purposes
         }
 
         [HttpPut("{id}")] // updates a shop in the database
-        public async Task Put(int id, [FromBody] Admin value)
+        public async Task Put(int id, [FromBody] Trainer value)
         {
-            Console.WriteLine(value.adminName); // prints the shopname to the console for testing or debugging
+            Console.WriteLine(value.trainerName); // prints the shopname to the console for testing or debugging
             Database myDatabase = new();
-            await myDatabase.UpdateAdmin(value, id); // updates the shop in the database
+            await myDatabase.UpdateTrainer(value, id); // updates the shop in the database
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestAdmin request)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             try
             {
                 Database myDatabase = new(); // creates the database class
-                var admins = await myDatabase.GetAllAdmins(); // gets all of the admins from the database
-                for(int i = 0; i < admins.Count; i++)
+                var trainers = await myDatabase.GetAllTrainers(); // gets all of the admins from the database
+
+                Trainer trainer = null;
+                for (int i = 0; i < trainers.Count; i++) // loops thorugh the array of users to find if any of them match the provided email and password in the login form. 
                 {
-                    Console.WriteLine("Test admin test");
-                    Console.WriteLine(admins[i].adminName);
-                }
-                Admin admin = null;
-                for(int i = 0; i < admins.Count; i++) // loops thorugh the array of users to find if any of them match the provided email and password in the login form. 
-                {
-                    if(admins[i].adminEmail.ToLower() == request.Email.ToLower() && admins[i].adminPassword == request.Password)
+                    if (trainers[i].trainerEmail.ToLower() == request.Email.ToLower() && trainers[i].trainerPassword == request.Password)
                     {
-                        admin = admins[i];
+                        trainer = trainers[i];
                         break;
                     }
                 }
 
-                if (admin != null) // makes sure the user is found then returns the User back with the information below. 
+                if (trainer != null) // makes sure the user is found then returns the User back with the information below. 
                 {
                     return new JsonResult(new
                     {
                         success = true,
-                        admin = new{
-                            id = admin.adminID,
-                            email = admin.adminEmail,
-                            name = admin.adminName
+                        trainer = new
+                        {
+                            id = trainer.trainerID,
+                            email = trainer.trainerEmail,
+                            name = trainer.trainerName
                         }
                     });
                 }
@@ -93,7 +90,7 @@ namespace API.Controllers
                     success = false,
                     message = "Invalid email or password"
                 });
-                
+
             }
             catch (Exception ex)
             {
@@ -106,10 +103,10 @@ namespace API.Controllers
         }
     }
 
-    public class LoginRequestAdmin
+    public class LoginRequestTrainer
     {
         public string Email { get; set; }
         public string Password { get; set; }
     }
-        
+
 }
