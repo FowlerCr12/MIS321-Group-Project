@@ -182,8 +182,13 @@ namespace API.Databases
 
         public async Task InsertClass(Class myClass) // inserts a new shop into the database
         {
-            string sql = "INSERT INTO class (userEmail, userName, userPassword, userPayment) VALUES (@userEmail, @userName, @userPassword, @userPayment)"; // the SQL query that is used to insert the information into the database
+            string sql = "INSERT INTO class (classTime, classDate, classType, className, classCapacity) VALUES (@classTime, @classDate, @classType, @className, @classCapacity)"; // the SQL query that is used to insert the information into the database
             List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@classTime", myClass.classTime) { Value = myClass.classTime }); // adds the classTime to the list of parameters
+            parms.Add(new MySqlParameter("@classDate", myClass.classDate) { Value = myClass.classDate }); // adds the classDate to the list of parameters
+            parms.Add(new MySqlParameter("@classType", myClass.classType) { Value = myClass.classType }); // adds the classType to the list of parameters
+            parms.Add(new MySqlParameter("@className", myClass.className) { Value = myClass.className }); // adds the className to the list of parameters
+            parms.Add(new MySqlParameter("@classCapacity", myClass.classCapacity) { Value = myClass.classCapacity }); // adds the classCapacity to the list of parameters
             //parms.Add(new MySqlParameter("@userEmail", myClass.userEmail) { Value = myClass.userEmail }); // adds the userEmail to the list of parameters
             //parms.Add(new MySqlParameter("@userName", myClass.userName) { Value = myClass.userName }); // adds the userName to the list of parameters
             //parms.Add(new MySqlParameter("@userPassword", myClass.userPassword) { Value = myClass.userPassword }); // adds the userPassword to the list of parameters
@@ -213,7 +218,7 @@ namespace API.Databases
     
 
             // ADMIN DATABASE FUNCTIONS BELOW THIS LINE ------------------------------------------------------------------------------------------------------------------------------------
-
+#region AdminDatabaseFunctions
             private async Task<List<Admin>> SelectAdmins(string sql, List<MySqlParameter> parms) // gets all of the classes from the database.
         {
             List<Admin> allAdmins = new(); // makes a list of admins
@@ -302,8 +307,9 @@ namespace API.Databases
             parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
             await AdminsNoReturnSql(sql, parms); // calls the UsersNoReturnSql function to update the shop in the database
         }
+#endregion
 
-
+#region TrainerDatabaseFunctions
         // TRAINER DATABASE FUNCTIONS BELOW THIS LINE ------------------------------------------------------------------------------------------------------------------------------------
 
         private async Task<List<Trainer>> SelectTrainers(string sql, List<MySqlParameter> parms) // gets all of the classes from the database.
@@ -326,8 +332,8 @@ namespace API.Databases
                 {
                     trainerID = reader.GetInt32(0),
                     trainerEmail = reader.IsDBNull(1) ? null : reader.GetString(1),
-                    trainerName = reader.IsDBNull(2) ? null : reader.GetString(2),
-                    trainerPassword = reader.IsDBNull(3) ? null : reader.GetString(3),
+                    trainerPassword = reader.IsDBNull(2) ? null : reader.GetString(2),
+                    trainerName = reader.IsDBNull(3) ? null : reader.GetString(3),
                 });
             }
 
@@ -394,6 +400,6 @@ namespace API.Databases
             parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
             await TrainersNoReturnSql(sql, parms); // calls the UsersNoReturnSql function to update the shop in the database
         }
-
+#endregion
     }
 }
