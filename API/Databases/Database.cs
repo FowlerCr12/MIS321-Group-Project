@@ -210,5 +210,98 @@ namespace API.Databases
             //parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
             await ClassesNoReturnSql(sql, parms); // calls the UsersNoReturnSql function to update the shop in the database
         }
+    
+
+            // ADMIN DATABASE FUNCTIONS BELOW THIS LINE ------------------------------------------------------------------------------------------------------------------------------------
+
+            private async Task<List<Admin>> SelectAdmins(string sql, List<MySqlParameter> parms) // gets all of the classes from the database.
+        {
+            List<Admin> allAdmins = new(); // makes a list of admins
+            using var connection = new MySqlConnection(cs); // makes a new connection to the databse based on the "cs" string
+            await connection.OpenAsync(); // opens the connection to the database
+            using var command = new MySqlCommand(sql, connection);
+
+            if (parms != null) // adds the parameters from the other functions if there are any
+            {
+                command.Parameters.AddRange(parms.ToArray());
+            }
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                allAdmins.Add(new Admin() // adds the admin to the list
+                {
+                    adminID = reader.GetInt32(0),
+                    adminEmail = reader.IsDBNull(1) ? null : reader.GetString(1),
+                    adminName = reader.IsDBNull(2) ? null : reader.GetString(2),
+                    adminPassword = reader.IsDBNull(3) ? null : reader.GetString(3),
+                });
+            }
+
+            return allAdmins;
+        }
+
+        private async Task AdminsNoReturnSql(string sql, List<MySqlParameter> parms) // use for updates, inserts, deletes
+        {
+            List<Admin> allAdmins = new(); // makes list of shops
+            using var connection = new MySqlConnection(cs); // makes a new connection to the databse based on the "cs" string
+            await connection.OpenAsync();
+            using var command = new MySqlCommand(sql, connection);
+
+            if (parms != null) // adds the parameters from the other functions if there are any
+            {
+                command.Parameters.AddRange(parms.ToArray());
+            }
+
+            await command.ExecuteNonQueryAsync();
+
+        }
+
+        public async Task<List<Admin>> GetAllAdmins() // gets all of the shops from the database
+        {
+            string sql = "SELECT * FROM admin where deleted != 'Y'"; // the SQL query that is used to get the information from the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            return await SelectAdmins(sql, parms);
+
+        }
+
+        public async Task<List<Admin>> GetAdmin(int id)
+        {
+            string sql = $"SELECT * FROM admin WHERE adminID = @id"; // the SQL query that is used to get the information from the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
+            return await SelectAdmins(sql, parms);
+        }
+
+        public async Task InsertAdmin(Admin myAdmin) // inserts a new user into the database
+        {
+            string sql = "INSERT INTO admin (adminEmail, adminName, adminPassword) VALUES (@adminEmail, @adminName, @adminPassword)"; // the SQL query that is used to insert the information into the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@adminEmail", myAdmin.adminEmail) { Value = myAdmin.adminEmail }); // adds the userEmail to the list of parameters
+            parms.Add(new MySqlParameter("@adminName", myAdmin.adminName) { Value = myAdmin.adminName }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@adminPassword", myAdmin.adminPassword) { Value = myAdmin.adminPassword }); // adds the userPassword to the list of parameters
+            await AdminsNoReturnSql(sql, parms); // calls the UsersNoReturnSQL function to insert the user into the database
+        }
+
+        public async Task DeleteAdmin(int id) // deletes a shop from the database
+        {
+            string sql = "UPDATE admin SET deleted = 'Y' WHERE id = @id"; // the SQL query that is used to delete the information from the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
+            await AdminsNoReturnSql(sql, parms); // calls the UsersNoReturnSql function to delete the shop from the database
+        }
+
+         public async Task UpdateAdmin(Admin myAdmin, int id) // updates a shop in the database
+        {
+            string sql = "UPDATE admin SET adminEmail = @adminEmail, adminName = @adminName, adminPassword = @adminPassword"; // the SQL query that is used to update the information in the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@adminEmail", myAdmin.adminEmail) { Value = myAdmin.adminEmail }); // adds the userEmail to the list of parameters
+            parms.Add(new MySqlParameter("@adminName", myAdmin.adminName) { Value = myAdmin.adminName }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@adminPassword", myAdmin.adminPassword) { Value = myAdmin.adminPassword }); // adds the userPassword to the list of parameters
+            parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
+            await AdminsNoReturnSql(sql, parms); // calls the UsersNoReturnSql function to update the shop in the database
+        }
+
     }
 }

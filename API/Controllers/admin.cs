@@ -3,35 +3,37 @@ using Microsoft.AspNetCore.Mvc;
 using API.Models; // adds connection so that it knows what "Book" is
 //using API.Models.Interfaces; // adds so it knows what IGetAllBooks is
 using API.Databases;
+
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UsersController : ControllerBase
+        [Route("api/[controller]")]
+        [ApiController]
+
+    public class AdminsController : ControllerBase
     {
         // GET: api/<shops>
         [HttpGet] // gets all of the shops from the database
-        public async Task<List<User>> Get()
+        public async Task<List<Admin>> Get()
         {
             Database myDatabase = new();
-            return await myDatabase.GetAllUsers();
+            return await myDatabase.GetAllAdmins();
         }
 
         // GET: api/shops/id
         [HttpGet("{id}")] // gets a shop from the database bu the id of the shop
-        public async Task<User> Get(int id)
+        public async Task<Admin> Get(int id)
         {
             Database myDatabase = new();
-            return (await myDatabase.GetUser(id)).FirstOrDefault();
+            return (await myDatabase.GetAdmin(id)).FirstOrDefault();
         }
 
         // POST api/<shops>
         [HttpPost] // adds a new shop to the database
-        public async Task Post([FromBody] User value)
+        public async Task Post([FromBody] Admin value)
         {
-            Console.WriteLine(value.userName);
+            Console.WriteLine(value.adminName);
             Database myDatabase = new();
-            await myDatabase.InsertUser(value);
+            await myDatabase.InsertAdmin(value);
         }
 
 
@@ -40,16 +42,16 @@ namespace API.Controllers
         public async Task Delete(int id)
         {
             Database myDatabase = new();
-            await myDatabase.DeleteUser(id);
+            await myDatabase.DeleteAdmin(id);
             Console.WriteLine(id); // prints the id for denbugging purposes
         }
 
         [HttpPut("{id}")] // updates a shop in the database
-        public async Task Put(int id, [FromBody] User value)
+        public async Task Put(int id, [FromBody] Admin value)
         {
-            Console.WriteLine(value.userName); // prints the shopname to the console for testing or debugging
+            Console.WriteLine(value.adminName); // prints the shopname to the console for testing or debugging
             Database myDatabase = new();
-            await myDatabase.UpdateUser(value, id); // updates the shop in the database
+            await myDatabase.UpdateAdmin(value, id); // updates the shop in the database
         }
 
         [HttpPost("login")]
@@ -58,27 +60,27 @@ namespace API.Controllers
             try
             {
                 Database myDatabase = new(); // creates the database class
-                var users = await myDatabase.GetAllUsers(); // gets all of the users from the database
+                var admins = await myDatabase.GetAllAdmins(); // gets all of the admins from the database
                 
-                User user = null;
-                for(int i = 0; i < users.Count; i++) // loops thorugh the array of users to find if any of them match the provided email and password in the login form. 
+                Admin admin = null;
+                for(int i = 0; i < admins.Count; i++) // loops thorugh the array of users to find if any of them match the provided email and password in the login form. 
                 {
-                    if(users[i].userEmail.ToLower() == request.Email.ToLower() && users[i].userPassword == request.Password)
+                    if(admins[i].adminEmail.ToLower() == request.Email.ToLower() && admins[i].adminPassword == request.Password)
                     {
-                        user = users[i];
+                        admin = admins[i];
                         break;
                     }
                 }
 
-                if (user != null) // makes sure the user is found then returns the User back with the information below. 
+                if (admin != null) // makes sure the user is found then returns the User back with the information below. 
                 {
                     return new JsonResult(new
                     {
                         success = true,
-                        user = new{
-                            id = user.userID,
-                            email = user.userEmail,
-                            name = user.userName
+                        admin = new{
+                            id = admin.adminID,
+                            email = admin.adminEmail,
+                            name = admin.adminName
                         }
                     });
                 }
@@ -100,10 +102,10 @@ namespace API.Controllers
         }
     }
 
-    public class LoginRequest
+    public class LoginRequestAdmin
     {
         public string Email { get; set; }
         public string Password { get; set; }
     }
-
+        
 }
