@@ -3,6 +3,7 @@ using API;
 // Run database test
 await DatabaseAdminTest.RunTest();
 await DatabaseTest.RunTest();
+await DatabaseTeachesTest.RunTest();
 
 var builder = WebApplication.CreateBuilder(args);
 

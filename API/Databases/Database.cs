@@ -13,7 +13,7 @@ namespace API.Databases
             cs = "Server=lgg2gx1ha7yp2w0k.cbetxkdyhwsb.us-east-1.rds.amazonaws.com;User ID=wnh64lk32rq36af5;Database=gfpku6ep7udf4m7m;Port=3306;Password=heinlafs5cyqs6wu";
 
         }
-
+#region UserDatabaseFunctions
         private async Task<List<User>> SelectUsers(string sql, List<MySqlParameter> parms) // gets all of the shops from the database.
         {
             List<User> allUsers = new(); // makes a list of shops
@@ -112,10 +112,10 @@ namespace API.Databases
             List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
             return await SelectUsers(sql, parms);
         }
-
+#endregion
 
         // CLASSES DATABASE FUNCTIONS BELOW THIS LINE ------------------------------------------------------------------------------------------------------------------------------------
-
+#region ClassesDatabaseFunctions
 
         private async Task<List<Class>> SelectClasses(string sql, List<MySqlParameter> parms) // gets all of the classes from the database.
         {
@@ -216,7 +216,7 @@ namespace API.Databases
             await ClassesNoReturnSql(sql, parms); // calls the UsersNoReturnSql function to update the shop in the database
         }
     
-
+#endregion
             // ADMIN DATABASE FUNCTIONS BELOW THIS LINE ------------------------------------------------------------------------------------------------------------------------------------
 #region AdminDatabaseFunctions
             private async Task<List<Admin>> SelectAdmins(string sql, List<MySqlParameter> parms) // gets all of the classes from the database.
@@ -314,7 +314,7 @@ namespace API.Databases
 
         private async Task<List<Trainer>> SelectTrainers(string sql, List<MySqlParameter> parms) // gets all of the classes from the database.
         {
-            List<Trainer> allTrainers = new(); // makes a list of Trainers
+            List<Trainer> allTeaches = new(); // makes a list of Teaches
             using var connection = new MySqlConnection(cs); // makes a new connection to the databse based on the "cs" string
             await connection.OpenAsync(); // opens the connection to the database
             using var command = new MySqlCommand(sql, connection);
@@ -328,7 +328,7 @@ namespace API.Databases
 
             while (await reader.ReadAsync())
             {
-                allTrainers.Add(new Trainer() // adds the admin to the list
+                allTeaches.Add(new Trainer() // adds the admin to the list
                 {
                     trainerID = reader.GetInt32(0),
                     trainerEmail = reader.IsDBNull(1) ? null : reader.GetString(1),
@@ -337,12 +337,12 @@ namespace API.Databases
                 });
             }
 
-            return allTrainers;
+            return allTeaches;
         }
 
         private async Task TrainersNoReturnSql(string sql, List<MySqlParameter> parms) // use for updates, inserts, deletes
         {
-            List<Trainer> allTrainers = new(); // makes list of shops
+            List<Trainer> allTeaches = new(); // makes list of shops
             using var connection = new MySqlConnection(cs); // makes a new connection to the databse based on the "cs" string
             await connection.OpenAsync();
             using var command = new MySqlCommand(sql, connection);
@@ -400,6 +400,102 @@ namespace API.Databases
             parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
             await TrainersNoReturnSql(sql, parms); // calls the UsersNoReturnSql function to update the shop in the database
         }
-#endregion
+        #endregion
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        //TEACHES DATABASE FUNCTIONS BELOW THIS LINE ----------------------------------------------------------------------------------------------
+        #region TeachesDatabaseFunctions
+        private async Task<List<Teaches>> SelectTeaches(string sql, List<MySqlParameter> parms) // gets all of the classes from the database.
+        {
+            List<Teaches> allTeaches = new(); // makes a list of Teaches
+            using var connection = new MySqlConnection(cs); // makes a new connection to the databse based on the "cs" string
+            await connection.OpenAsync(); // opens the connection to the database
+            using var command = new MySqlCommand(sql, connection);
+
+            if (parms != null) // adds the parameters from the other functions if there are any
+            {
+                command.Parameters.AddRange(parms.ToArray());
+            }
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                allTeaches.Add(new Teaches() // adds the admin to the list
+                {
+                    trainerID = reader.GetInt32(0),
+                    classID = reader.GetInt32(1)
+                });
+            }
+
+            return allTeaches;
+        }
+
+        private async Task TeachesNoReturnSql(string sql, List<MySqlParameter> parms) // use for updates, inserts, deletes
+        {
+            List<Trainer> allTeaches = new(); // makes list of shops
+            using var connection = new MySqlConnection(cs); // makes a new connection to the databse based on the "cs" string
+            await connection.OpenAsync();
+            using var command = new MySqlCommand(sql, connection);
+
+            if (parms != null) // adds the parameters from the other functions if there are any
+            {
+                command.Parameters.AddRange(parms.ToArray());
+            }
+
+            await command.ExecuteNonQueryAsync();
+
+        }
+
+        public async Task<List<Teaches>> GetAllTeaches() // gets all of the shops from the database
+        {
+            string sql = "SELECT * FROM teaches where deleted != 'Y'"; // the SQL query that is used to get the information from the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            return await SelectTeaches(sql, parms);
+
+        }
+
+        public async Task<List<Teaches>> GetTeaches(int id)
+        {
+            string sql = $"SELECT * FROM teaches WHERE trainerID = @id"; // the SQL query that is used to get the information from the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
+            return await SelectTeaches(sql, parms);
+        }
+
+        public async Task InsertTeaches(Teaches myTeaches) // inserts a new user into the database
+        {
+            string sql = "INSERT INTO teaches (trainerID, classID) VALUES (@trainerEmail, @trainerID, @classID)"; // the SQL query that is used to insert the information into the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@trainerID", myTeaches.trainerID) { Value = myTeaches.trainerID }); // adds the userEmail to the list of parameters
+            parms.Add(new MySqlParameter("@classID", myTeaches.classID) { Value = myTeaches.classID }); // adds the userName to the list of parameters
+            await TeachesNoReturnSql(sql, parms); // calls the UsersNoReturnSQL function to insert the user into the database
+        }
+
+        public async Task DeleteTeaches(int id) // deletes a shop from the database
+        {
+            string sql = "UPDATE teaches SET deleted = 'Y' WHERE id = @id"; // the SQL query that is used to delete the information from the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
+            await TeachesNoReturnSql(sql, parms); // calls the UsersNoReturnSql function to delete the shop from the database
+        }
+
+        public async Task UpdateTeaches(Teaches myTeaches, int id) // updates a shop in the database
+        {
+            string sql = "UPDATE teaches SET trainerID = @trainerID, classID = @classID"; // the SQL query that is used to update the information in the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@trainerID", myTeaches.trainerID) { Value = myTeaches.trainerID }); // adds the userEmail to the list of parameters
+            parms.Add(new MySqlParameter("@classID", myTeaches.classID) { Value = myTeaches.classID }); // adds the userName to the list of parameters
+            await TeachesNoReturnSql(sql, parms); // calls the UsersNoReturnSql function to update the shop in the database
+        }
+        #endregion
+
     }
 }
