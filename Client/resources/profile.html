@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile</title>
+  <link rel="stylesheet" href="styles/home.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: rgb(154, 212, 241);          
+      min-height: 100vh;
+      padding-top: 100px;
+    }
+
+    .navbar {
+      width: 100%;
+      background: white;
+      padding: 27px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: fixed;
+      top: 0;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .menu-icon, .profile-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+
+    .menu-btn, .profile-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .dropdown, .profile {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content, .profile-content {
+      display: none;
+      position: absolute;
+      background: white;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+      z-index: 1000;
+    }
+
+    .dropdown-content a, .profile-content a {
+      display: block;
+      padding: 10px;
+      text-decoration: none;
+      color: black;
+    }
+
+    .dropdown-content a:hover, .profile-content a:hover {
+      background: #ddd;
+    }
+
+    .dropdown:hover .dropdown-content,
+    .profile:hover .profile-content {
+      display: block;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .section-title {
+      font-size: 24px;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li {
+      padding: 10px 0;
+      border-bottom: 1px solid #ccc;
+    }
+
+    li:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <!-- left dropdown menu -->
+    <div class="dropdown">
+      <button class="menu-btn">
+        <img src="https://getdrawings.com/free-icon-bw/drop-down-menu-icon-24.png" alt="Menu" class="menu-icon">
+      </button>            
+      <div class="dropdown-content">
+        <a href="./home.html">Home</a>
+        <a href="./classtypes.html">Class Types</a>
+        <a href="./schedule.html">Class Schedule</a>
+        <a href="./private.html">Private Training</a>
+        <a href="./apparel.html">Apparel</a>
+        <a href="./gallery.html">Gallery</a>
+        <a href="./faq.html">FAQ</a>
+      </div>
+    </div>
+
+    <div class="logo">Profile</div>
+
+    <!-- right profile dropdown -->
+    <div class="profile">
+      <button class="profile-btn">
+        <img src="https://icon-library.com/images/profile-png-icon/profile-png-icon-1.jpg" alt="Profile" class="profile-icon">
+      </button>            
+      <div class="profile-content">
+        <a href="./profile.html">Profile</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Info Section -->
+  <div class="container">
+    <h2>Welcome, [User Name]</h2>
+
+    <div class="card">
+      <div class="section-title">Login Information</div>
+      <p><strong>Email:</strong> <span id="userEmail">user@example.com</span></p>
+      <p><strong>Username:</strong> <span id="userName">username123</span></p>
+    </div>
+
+    <div class="card">
+      <div class="section-title">My Bookings</div>
+      <ul id="bookingList">
+        <li>No bookings yet.</li>
+        <!-- Future bookings will be inserted here dynamically -->
+      </ul>
+    </div>
+  </div>
+
+</body>
+</html>
