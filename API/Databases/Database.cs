@@ -497,5 +497,112 @@ namespace API.Databases
         }
         #endregion
 
+
+
+        //PET DATABASE FUNCTIONS BELOW THIS LINE ----------------------------------------------------------------------------------------------
+        #region PetDatabaseFunctions
+        private async Task<List<Pet>> SelectPet(string sql, List<MySqlParameter> parms) // gets all of the classes from the database.
+        {
+            List<Pet> allPets = new(); // makes a list of Pet
+            using var connection = new MySqlConnection(cs); // makes a new connection to the databse based on the "cs" string
+            await connection.OpenAsync(); // opens the connection to the database
+            using var command = new MySqlCommand(sql, connection);
+
+            if (parms != null) // adds the parameters from the other functions if there are any
+            {
+                command.Parameters.AddRange(parms.ToArray());
+            }
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                allPets.Add(new Pet() // adds the admin to the list
+                {
+                    petID = reader.GetInt32(0),
+                    petName = reader.IsDBNull(1) ? null : reader.GetString(1),
+                    petType = reader.IsDBNull(2) ? null : reader.GetString(2),
+                    petAge = reader.GetInt32(3),
+                    petWeight = reader.GetInt32(4),
+                    petBreed = reader.IsDBNull(5) ? null : reader.GetString(5),
+                    petMedConditions = reader.IsDBNull(6) ? null : reader.GetString(6),
+                    userID = reader.GetInt32(7)
+                });
+            }
+
+            return allPets;
+        }
+
+        private async Task PetNoReturnSql(string sql, List<MySqlParameter> parms) // use for updates, inserts, deletes
+        {
+            List<Pet> allPets = new(); // makes list of shops
+            using var connection = new MySqlConnection(cs); // makes a new connection to the databse based on the "cs" string
+            await connection.OpenAsync();
+            using var command = new MySqlCommand(sql, connection);
+
+            if (parms != null) // adds the parameters from the other functions if there are any
+            {
+                command.Parameters.AddRange(parms.ToArray());
+            }
+
+            await command.ExecuteNonQueryAsync();
+
+        }
+
+        public async Task<List<Pet>> GetAllPets() // gets all of the shops from the database
+        {
+            string sql = "SELECT * FROM pet where deleted != 'Y'"; // the SQL query that is used to get the information from the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            return await SelectPet(sql, parms);
+
+        }
+
+        public async Task<List<Pet>> GetPet(int id)
+        {
+            string sql = $"SELECT * FROM pet WHERE petID = @id"; // the SQL query that is used to get the information from the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
+            return await SelectPet(sql, parms);
+        }
+
+        public async Task InsertPet(Pet myPet) // inserts a new user into the database
+        {
+            string sql = "INSERT INTO pet (petID, petName, petType, petAge, petWeight, petBreed, petMedConditions, userID) VALUES (@petID, @petName, @petType, @petAge, @petWeight, @petBreed, @petMedConditions, @userID)"; // the SQL query that is used to insert the information into the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@petID", myPet.petID) { Value = myPet.petID }); // adds the userEmail to the list of parameters
+            parms.Add(new MySqlParameter("@petName", myPet.petName) { Value = myPet.petName }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@petType", myPet.petType) { Value = myPet.petType }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@petAge", myPet.petAge) { Value = myPet.petAge }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@petWeight", myPet.petWeight) { Value = myPet.petWeight }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@petBreed", myPet.petBreed) { Value = myPet.petBreed }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@petMedConditions", myPet.petMedConditions) { Value = myPet.petMedConditions }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@userID", myPet.userID) { Value = myPet.userID }); // adds the userName to the list of parameters
+            await PetNoReturnSql(sql, parms); // calls the UsersNoReturnSQL function to insert the user into the database
+        }
+
+        public async Task DeletePet(int id) // deletes a shop from the database
+        {
+            string sql = "UPDATE teaches SET deleted = 'Y' WHERE id = @id"; // the SQL query that is used to delete the information from the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
+            await TeachesNoReturnSql(sql, parms); // calls the UsersNoReturnSql function to delete the shop from the database
+        }
+
+        public async Task UpdatePet(Pet myPet, int id) // updates a shop in the database
+        {
+            string sql = "UPDATE pet SET petID = @petID, petName = @petName, petType = @petType, petAge = @petAge, petWeight = @petWeight, petBreed = @petBreed, petMedConditions = @petMedConditions, userID = @userID"; // the SQL query that is used to update the information in the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@petID", myPet.petID) { Value = myPet.petID }); // adds the userEmail to the list of parameters
+            parms.Add(new MySqlParameter("@petName", myPet.petName) { Value = myPet.petName }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@petType", myPet.petType) { Value = myPet.petType }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@petAge", myPet.petAge) { Value = myPet.petAge }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@petWeight", myPet.petWeight) { Value = myPet.petWeight }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@petBreed", myPet.petBreed) { Value = myPet.petBreed }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@petMedConditions", myPet.petMedConditions) { Value = myPet.petMedConditions }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@userID", myPet.userID) { Value = myPet.userID }); // adds the userName to the list of parameters
+            await PetNoReturnSql(sql, parms); // calls the UsersNoReturnSql function to update the shop in the database
+        }
+        #endregion
+
     }
 }
