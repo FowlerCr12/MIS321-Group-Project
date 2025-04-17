@@ -1,6 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("container")
     let errorModal;
+    let response;
+    addUserSuccess = new PopupModal({ // instantiates the popupmodal for when the login is not correct. 
+        title: 'Success',
+        type: 'success',
+        modalId: 'addUserSuccess'
+    })
+    addUserError = new PopupModal({ // instantiates the popupmodal for when the login is not correct. 
+        title: 'Error',
+        type: 'error',
+        modalId: 'addUserError'
+    })
 
     container.className = "container"
     container.style.marginTop = "120px"  // Has to be 120px because of the header that is built with html and css has 120px 
@@ -70,7 +81,119 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
     document.body.appendChild(addUserModal)
+    
+    
+    document.getElementById('saveUserBtn').addEventListener('click', handleAddUser); // event listener to make the function run when the button is clicked
 
+    async function handleAddClass()
+    {
+        modal = bootstrap.Modal.getInstance(document.getElementById('addClassModal'))
+        
+        // Format the date to match the database format (YYYY-MM-DD)
+        const dateValue = document.getElementById('classDate').value;
+        
+        // Format the time to match the database format (HH:MM:SS)
+        const timeValue = document.getElementById('classTime').value;
+        const formattedTime = timeValue + ":00"; // Add seconds to match HH:MM:SS format
+        
+        const classInfo = 
+        {
+            className: document.getElementById('className').value,
+            classType: document.getElementById('classType').value,
+            classDate: dateValue,
+            classTime: formattedTime,
+            classCapacity: parseInt(document.getElementById('classCapacity').value)
+        }
+
+        response = await fetch('http://localhost:5043/api/classes',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify(classInfo)
+        });
+
+        if(response.ok)
+        {
+            modal.hide()
+            addUserSuccess.show('Class added successfully')
+        }
+        else
+        {
+            modal.hide()
+            addUserError.show(response.statusText)
+        }
+        
+        
+    }
+
+    async function handleAddUser() {
+        let userType = document.getElementById('userAccountType').value
+        modal = bootstrap.Modal.getInstance(document.getElementById('addUserModal'))
+
+        if(userType === 'admin')
+        {
+            const adminUser = {
+                adminName: document.getElementById('userName').value,
+                adminEmail: document.getElementById('userEmail').value,
+                adminPassword: document.getElementById('userPassword').value
+            };
+            
+            response = await fetch('http://localhost:5043/api/admins', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                body: JSON.stringify(adminUser)
+            });
+        }
+
+        if(userType === 'trainer')
+        {
+            const trainerUser = {
+                trainerName: document.getElementById('userName').value,
+                trainerEmail: document.getElementById('userEmail').value,
+                trainerPassword: document.getElementById('userPassword').value
+            };
+            
+            response = await fetch('http://localhost:5043/api/trainers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                body: JSON.stringify(trainerUser)
+            });
+        }
+
+        if(userType === 'user')
+        {
+            const regularUser = {
+                userName: document.getElementById('userName').value,
+                userEmail: document.getElementById('userEmail').value,
+                userPassword: document.getElementById('userPassword').value
+            };
+            
+            response = await fetch('http://localhost:5043/api/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                body: JSON.stringify(regularUser)
+            });
+        }
+        if(response.ok)
+        {
+            modal.hide()
+            addUserSuccess.show('User added successfully')
+
+        }
+        else
+        {
+            modal.hide()
+            addUserError.show(response.statusText)
+        }
+    }
     // Create Add Class Modal
     const addClassModal = document.createElement("div")
     addClassModal.className = "modal fade" // fade makes it so it appears slower and not so jumpy
@@ -138,9 +261,12 @@ document.addEventListener("DOMContentLoaded", () => {
     scheduleCol.appendChild(scheduleGridContainer)
     scheduleRow.appendChild(scheduleCol)
 
-    // Append all elements to main container
+    // add all the elements to the page container
     container.appendChild(buttonRow)
     container.appendChild(scheduleRow)
+
+    document.getElementById('saveClassBtn').addEventListener('click', handleAddClass);
+
 
     // Create info modal
     const infoModal = document.createElement("div")
@@ -159,6 +285,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p><strong>Date:</strong> <span id="modalDate"></span></p>
                     <p><strong>Time:</strong> <span id="modalTime"></span></p>
                     <p><strong>Capacity:</strong> <span id="modalCapacity"></span></p>
+                    <div>
+                        <button class="btn btn-primary" id="editClassBtn">Edit</button>
+                        <button class="btn btn-danger" id="deleteClassBtn">Delete</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -256,7 +386,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 ${session.className}
                                 <br><small>${session.classType}</small>
                             </div>
-                            <button class="btn btn-sm btn-outline-dark view-info-btn" data-index="${index}">
+                            <button class="btn btn-sm btn-outline-dark view-info-btn" data-index="${index}" data-class-id="${session.classId}">
                                 View Info
                             </button>
                         `
@@ -287,5 +417,15 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             errorModal.show('The schedule failed to load. Please try again later.');
         })
+    document.getElementById('editClassBtn').addEventListener('click', handleEditClass);
+    document.getElementById('deleteClassBtn').addEventListener('click', handleDeleteClass);
 });
+
+async function handleEditClass(classId) {
+    console.log("Edit class button clicked")
+}
+
+async function handleDeleteClass(classId) {
+    console.log("Delete class button clicked")
+}
 

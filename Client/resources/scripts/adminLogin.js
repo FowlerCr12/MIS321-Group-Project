@@ -64,7 +64,8 @@ function createLoginForm() {
     loginButton.textContent = 'Login'
     loginFormGroup.appendChild(loginButton)
 
-    loginButton.addEventListener('click', handleLogin)
+    // Add event listener to the form instead of just the button
+    loginForm.addEventListener('submit', handleLogin)
 }
 
 // handle the login here
@@ -74,9 +75,14 @@ async function handleLogin(e) {
     const email = document.getElementById('emailInput').value
     const password = document.getElementById('passwordInput').value
 
+    if(email === null || password === null)
+    {
+        errorModal.show('Please enter both email and password')
+        return
+    }
 
     try {
-        const response = await fetch('http://localhost:5043/api/users/login', {
+        const response = await fetch('http://localhost:5043/api/admins/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -84,18 +90,18 @@ async function handleLogin(e) {
             body: JSON.stringify({ email, password })
         })
 
+
         const data = await response.json()
+        console.log('Login response:', data)
 
         if (data.success) {
-            // Store user data in localStorage
             localStorage.setItem('user', JSON.stringify(data.user))
-            // Redirect to home page
-            window.location.href = './home.html'
+            window.location.href = './adminDashboard.html'
         } else {
             errorModal.show('Invalid email or password')
         }
     } catch (error) {
         console.error('Error:', error)
-        errorModal.show('An error occurred while logging in')
+        errorModal.show(`An error occurred while logging in: ${error.message}`)
     }
 }
