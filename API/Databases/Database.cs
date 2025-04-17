@@ -604,5 +604,100 @@ namespace API.Databases
         }
         #endregion
 
+
+
+        //TRAINER REQUEST DATABASE FUNCTIONS BELOW THIS LINE ----------------------------------------------------------------------------------------------
+        #region TrainerRequestDatabaseFunctions
+        private async Task<List<TrainerRequest>> SelectTrainerRequest(string sql, List<MySqlParameter> parms) // gets all of the classes from the database.
+        {
+            List<TrainerRequest> allTrainerRequests = new(); // makes a list of Pet
+            using var connection = new MySqlConnection(cs); // makes a new connection to the databse based on the "cs" string
+            await connection.OpenAsync(); // opens the connection to the database
+            using var command = new MySqlCommand(sql, connection);
+
+            if (parms != null) // adds the parameters from the other functions if there are any
+            {
+                command.Parameters.AddRange(parms.ToArray());
+            }
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                allTrainerRequests.Add(new TrainerRequest() // adds the admin to the list
+                {
+                    requestID = reader.GetInt32(0),
+                    requestStatus = reader.IsDBNull(1) ? null : reader.GetString(1),
+                    requestClassType = reader.IsDBNull(2) ? null : reader.GetString(2),
+                    trainerID = reader.GetInt32(3).ToString()
+                });
+            }
+
+            return allTrainerRequests;
+        }
+
+        private async Task TrainerRequestNoReturnSql(string sql, List<MySqlParameter> parms) // use for updates, inserts, deletes
+        {
+            List<Pet> allPets = new(); // makes list of shops
+            using var connection = new MySqlConnection(cs); // makes a new connection to the databse based on the "cs" string
+            await connection.OpenAsync();
+            using var command = new MySqlCommand(sql, connection);
+
+            if (parms != null) // adds the parameters from the other functions if there are any
+            {
+                command.Parameters.AddRange(parms.ToArray());
+            }
+
+            await command.ExecuteNonQueryAsync();
+
+        }
+
+        public async Task<List<TrainerRequest>> GetAllTrainerRequests() // gets all of the shops from the database
+        {
+            string sql = "SELECT * FROM trainerrequest where deleted != 'Y'"; // the SQL query that is used to get the information from the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            return await SelectTrainerRequest(sql, parms);
+
+        }
+
+        public async Task<List<TrainerRequest>> GetTrainerRequest(int id)
+        {
+            string sql = $"SELECT * FROM trainerrequest WHERE requestID = @id"; // the SQL query that is used to get the information from the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
+            return await SelectTrainerRequest(sql, parms);
+        }
+
+        public async Task InsertTrainerRequest(TrainerRequest myTrainerRequest) // inserts a new user into the database
+        {
+            string sql = "INSERT INTO trainerrequest (requestID, requestStatus, requestClassType, trainerID) VALUES (@requestID, @requestStatus, @requestClassType, @trainerID)"; // the SQL query that is used to insert the information into the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@requestID", myTrainerRequest.requestID) { Value = myTrainerRequest.requestID }); // adds the userEmail to the list of parameters
+            parms.Add(new MySqlParameter("@requestStatus", myTrainerRequest.requestStatus) { Value = myTrainerRequest.requestStatus }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@requestClassType", myTrainerRequest.requestClassType) { Value = myTrainerRequest.requestClassType }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@trainerID", myTrainerRequest.trainerID) { Value = myTrainerRequest.trainerID }); // adds the userName to the list of parameters
+            await PetNoReturnSql(sql, parms); // calls the UsersNoReturnSQL function to insert the user into the database
+        }
+    
+        public async Task DeleteTrainerRequest(int id) // deletes a shop from the database
+        {
+            string sql = "UPDATE trainerrequest SET deleted = 'Y' WHERE id = @id"; // the SQL query that is used to delete the information from the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
+            await TeachesNoReturnSql(sql, parms); // calls the UsersNoReturnSql function to delete the shop from the database
+        }
+
+        public async Task UpdateTrainerRequest(TrainerRequest myTrainerRequest, int id) // updates a shop in the database
+        {
+            string sql = "UPDATE trainerrequest SET requestID = @requestID, requestStatus = @requestStatus, requestClassType = @requestClassType, trainerID = @trainerID"; // the SQL query that is used to update the information in the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@requestID", myTrainerRequest.requestID) { Value = myTrainerRequest.requestID }); // adds the userEmail to the list of parameters
+            parms.Add(new MySqlParameter("@requestStatus", myTrainerRequest.requestStatus) { Value = myTrainerRequest.requestStatus }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@requestClassType", myTrainerRequest.requestClassType) { Value = myTrainerRequest.requestClassType }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@trainerID", myTrainerRequest.trainerID) { Value = myTrainerRequest.trainerID }); // adds the userName to the list of parameters
+            await PetNoReturnSql(sql, parms); // calls the UsersNoReturnSql function to update the shop in the database
+        }
+        #endregion
+
     }
 }
