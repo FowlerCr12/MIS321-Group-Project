@@ -629,7 +629,7 @@ namespace API.Databases
                     requestID = reader.GetInt32(0),
                     requestStatus = reader.IsDBNull(1) ? null : reader.GetString(1),
                     requestClassType = reader.IsDBNull(2) ? null : reader.GetString(2),
-                    trainerID = reader.GetInt32(3).ToString()
+                    trainerID = reader.GetInt32(4).ToString()
                 });
             }
 
@@ -697,7 +697,31 @@ namespace API.Databases
             parms.Add(new MySqlParameter("@trainerID", myTrainerRequest.trainerID) { Value = myTrainerRequest.trainerID }); // adds the userName to the list of parameters
             await PetNoReturnSql(sql, parms); // calls the UsersNoReturnSql function to update the shop in the database
         }
-        #endregion
 
+       public async Task<List<TrainerRequest>> GetPendingTrainerRequestsAsync()
+        {
+            string sql = "SELECT * FROM trainerRequest where requestStatus = 'Pending'";
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            return await SelectTrainerRequest(sql, parms);
+        }
+
+        public async Task<bool> ApproveTrainerRequestAsync(int id) // changes request status to approve if approved
+        {       
+            string sql = "UPDATE trainerRequest SET requestStatus = 'Approved' WHERE requestID = @id";
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
+            await TrainerRequestNoReturnSql(sql, parms);
+            return true; // Returns true if successful 
+        }
+
+          public async Task<bool> DenyTrainerRequestAsync(int id) // changes request status to deny if denied
+        {       
+            string sql = "UPDATE trainerRequest SET requestStatus = 'Denied' WHERE requestID = @id";
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
+            await TrainerRequestNoReturnSql(sql, parms);
+            return true; // Returns true if successful 
+        }
+        #endregion
     }
 }

@@ -123,9 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
         {
             modal.hide()
             addUserError.show(response.statusText)
-        }
-        
-        
+        } 
     }
 
     async function handleAddUser() {
@@ -307,6 +305,99 @@ document.addEventListener("DOMContentLoaded", () => {
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     const timeSlots = ["09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "01:00 PM", "1:30 PM", "2:00 PM", "02:30 PM", "3:00 PM", "3:30 PM", "04:00 PM"]
 
+    async function fetchTrainerRequests() {
+      try {
+        const response = await fetch('http://localhost:5043/api/TrainerRequests/pending');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Error fetching trainer requests:', error);
+        return [];
+      }
+    }
+
+    function buildTrainerRequestTable(requests) {
+        let requestTableHTML = `
+        <div class="mt-4">
+          <h3 class="mb-3">Trainer Class Requests</h3>
+          <table class="table table-bordered text-center align-middle bg-white schedule-table">
+            <thead class="table-dark">
+              <tr>
+                <th>Request ID</th>
+                <th>Trainer ID</th>
+                <th>Class Type</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        
+        if (!requests || requests.length === 0) {
+          requestTableHTML += `
+            <tr>
+              <td colspan="5">No pending trainer requests</td>
+            </tr>
+          `;
+        } else {
+          requests.forEach(request => {
+            requestTableHTML += `
+              <tr>
+                <td>${request.requestID}</td>
+                <td>${request.trainerID}</td>
+                <td>${request.requestClassType}</td>
+                <td>${request.requestStatus}</td>
+                <td>
+                  <div class="d-flex justify-content-center gap-2">
+                    <button class="btn btn-success" onclick="approveRequest(${request.requestID})">Approve</button>
+                    <button class="btn btn-danger" onclick="denyRequest(${request.requestID})">Deny</button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          });
+        }
+        
+        requestTableHTML += `
+              </tbody>
+            </table>
+          </div>
+        `;
+        
+        return requestTableHTML;
+      }
+
+    async function loadTrainerRequests() {
+      try {
+        const trainerRequests = await fetchTrainerRequests();
+        const requestTableHTML = buildTrainerRequestTable(trainerRequests);
+        
+        const scheduleGridContainer = document.getElementById('scheduleGridContainer');
+        
+        let requestTableContainer = document.getElementById('trainer-request-container');
+        if (!requestTableContainer) {
+          requestTableContainer = document.createElement('div');
+          requestTableContainer.id = 'trainer-request-container';
+          scheduleGridContainer.insertAdjacentElement('afterend', requestTableContainer);
+        }
+        
+        requestTableContainer.innerHTML = requestTableHTML;
+      } catch (error) {
+        console.error('Error loading trainer requests:', error);
+        errorModal = new PopupModal({
+          title: 'Error',
+          type: 'error',
+          modalId: 'trainerRequestsLoadError'
+        });
+        errorModal.show('Failed to load trainer requests. Please try again later.');
+      }
+    }
+    
     let tableHTML = `
         <table class="table table-bordered text-center align-middle bg-white schedule-table">
         <thead class="table-dark">
@@ -348,8 +439,10 @@ document.addEventListener("DOMContentLoaded", () => {
         </tbody>
         </table>
     `;
-
+    
     scheduleGridContainer.innerHTML = tableHTML;
+
+    loadTrainerRequests();
 
     function reformatTimeInformation(timeSpan) {
         [hours, minutes] = timeSpan.split(':')
@@ -360,7 +453,6 @@ document.addEventListener("DOMContentLoaded", () => {
         else {
             amOrPm = 'AM'
         }
-
         let hourFormatTwelve = hour % 12
         if (hourFormatTwelve === 0) {
             hourFormatTwelve = 12
@@ -394,7 +486,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-            // View Info modal for when you click on each one
             document.querySelectorAll(".view-info-btn").forEach(button => {
                 button.addEventListener("click", (e) => {
                     const session = data[e.target.getAttribute("data-index")]
@@ -421,6 +512,70 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('deleteClassBtn').addEventListener('click', handleDeleteClass);
 });
 
+async function approveRequest(requestID) { //handling approve request 
+  try {
+    const response = await fetch(`http://localhost:5043/api/TrainerRequests/approve/${requestID}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    
+    const successModal = new PopupModal({
+      title: 'Success',
+      type: 'success',
+      modalId: 'approveRequestSuccess'
+    });
+    successModal.show(`Request ${requestID} has been approved!`);
+    
+    loadTrainerRequests();
+  } catch (error) {
+    console.error('Error approving request:', error);
+    const errorModal = new PopupModal({
+      title: 'Error',
+      type: 'error',
+      modalId: 'approveRequestError'
+    });
+    errorModal.show('Failed to approve request. Please try again later.');
+  }
+}
+
+async function denyRequest(requestID) { //handling deny request 
+    try {
+      const response = await fetch(`http://localhost:5043/api/TrainerRequests/deny/${requestID}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      
+      const successModal = new PopupModal({
+        title: 'Success',
+        type: 'success',
+        modalId: 'approveRequestSuccess'
+      });
+      successModal.show(`Request ${requestID} has been denied!`);
+      
+      loadTrainerRequests();
+    } catch (error) {
+      console.error('Error denying request:', error);
+      const errorModal = new PopupModal({
+        title: 'Error',
+        type: 'error',
+        modalId: 'denyRequestError'
+      });
+      errorModal.show('Failed to deny request. Please try again later.');
+    }
+  }
+
 async function handleEditClass(classId) {
     console.log("Edit class button clicked")
 }
@@ -429,3 +584,68 @@ async function handleDeleteClass(classId) {
     console.log("Delete class button clicked")
 }
 
+function loadTrainerRequests() {  // load pending trainer requests
+  const requestTableContainer = document.getElementById('trainer-request-container');
+  if (requestTableContainer) {
+    fetch('http://localhost:5043/api/TrainerRequests/pending')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        let requestTableHTML = `
+        <div class="mt-4">
+          <h3 class="mb-3">Trainer Class Requests</h3>
+          <table class="table table-bordered text-center align-middle bg-white schedule-table">
+            <thead class="table-dark">
+              <tr>
+                <th>Request ID</th>
+                <th>Trainer Name</th>
+                <th>Class Type</th>
+                <th>Preferred Schedule</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        
+        if (!data || data.length === 0) {
+          requestTableHTML += `
+            <tr>
+              <td colspan="5">No pending trainer requests</td>
+            </tr>
+          `;
+        } else {
+          data.forEach(request => { //updating trainer requests dynamically
+            requestTableHTML += `
+              <tr>
+                <td>${request.requestID}</td>
+                <td>${request.trainerName}</td>
+                <td>${request.classType}</td>
+                <td>${request.preferredSchedule}</td>
+                <td>
+                  <div class="d-flex justify-content-center gap-2">
+                    <button class="btn btn-success" onclick="approveRequest(${request.requestID})">Approve</button>
+                    <button class="btn btn-danger" onclick="denyRequest(${request.requestID})">Deny</button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          });
+        }
+        
+        requestTableHTML += `
+            </tbody>
+          </table>
+        </div>
+        `;
+        
+        requestTableContainer.innerHTML = requestTableHTML;
+      })
+      .catch(error => {
+        console.error('Error refreshing trainer requests:', error);
+      });
+  }
+}
