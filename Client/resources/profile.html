@@ -148,12 +148,12 @@
 
   <!-- Profile Info Section -->
   <div class="container">
-    <h2>Welcome, [User Name]</h2>
+    <h2 id="welcome-text"></h2>
 
     <div class="card">
       <div class="section-title">Login Information</div>
-      <p><strong>Email:</strong> <span id="userEmail">user@example.com</span></p>
-      <p><strong>Username:</strong> <span id="userName">username123</span></p>
+      <p><strong></strong> <span id="userEmail"></span></p>
+      <p><strong></strong> <span id="userName"></span></p>
     </div>
 
     <div class="card">
@@ -164,6 +164,11 @@
       </ul>
     </div>
   </div>
-
 </body>
+        <script> // user info dynamically updated
+          user = JSON.parse(window.localStorage.getItem('user'));
+          document.getElementById("welcome-text").innerHTML = `Welcome, ${user.name}`;
+          document.getElementById("userEmail").innerHTML = `Email: ${user.email}`;
+          document.getElementById("userName").innerHTML = `Username: ${user.name}`;
+          </script>
 </html>
