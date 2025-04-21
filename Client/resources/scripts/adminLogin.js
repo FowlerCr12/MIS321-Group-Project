@@ -40,6 +40,21 @@ function createLoginForm() {
     loginFormGroup.classList.add('form-group')
     loginForm.appendChild(loginFormGroup)
 
+    let accountTypeSelect = document.createElement('select')
+    accountTypeSelect.id = 'accountTypeSelect'
+    accountTypeSelect.classList.add('form-control', 'mb-3')
+    loginFormGroup.appendChild(accountTypeSelect)
+
+    let adminChoice = document.createElement('option')
+    adminChoice.value = 'admin'
+    adminChoice.textContent = 'Admin'
+    accountTypeSelect.appendChild(adminChoice)
+
+    let trainerChoice = document.createElement('option')
+    trainerChoice.value = 'trainer'
+    trainerChoice.textContent = 'Trainer'
+    accountTypeSelect.appendChild(trainerChoice)
+
     // create the Enter email input field
     let emailInput = document.createElement('input')
     emailInput.type = 'email'
@@ -74,6 +89,18 @@ async function handleLogin(e) {
 
     const email = document.getElementById('emailInput').value
     const password = document.getElementById('passwordInput').value
+    const accountType = document.getElementById('accountTypeSelect').value
+
+    if(accountType === 'admin')
+    {
+        url = 'http://localhost:5043/api/admins/login'
+        hrefLink = './adminDashboard.html'
+    }
+    else
+    {
+        url = 'http://localhost:5043/api/trainers/login'
+        hrefLink = './trainerDashboard.html'
+    }
 
     if(email === null || password === null)
     {
@@ -82,23 +109,26 @@ async function handleLogin(e) {
     }
 
     try {
-        const response = await fetch('http://localhost:5043/api/admins/login', {
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ email, password })
         })
-
-
+        
         const data = await response.json()
-        console.log('Login response:', data)
 
         if (data.success) {
-            localStorage.setItem('user', JSON.stringify(data.user))
-            window.location.href = './adminDashboard.html'
+            // Check if data.user exists and is not undefined
+            if (data.user)
+            {
+                localStorage.setItem('user', JSON.stringify(data.user))
+                console.log(data.user)
+            }
+            window.location.href = hrefLink
         } else {
-            errorModal.show('Invalid email or password')
+            errorModal.show(data.message || 'Login failed. Please check your credentials.')
         }
     } catch (error) {
         console.error('Error:', error)
