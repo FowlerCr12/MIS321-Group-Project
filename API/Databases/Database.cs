@@ -723,5 +723,127 @@ namespace API.Databases
             return true; // Returns true if successful 
         }
         #endregion
+
+        // ENROLLS DATABASE FUNCTIONS BELOW THIS LINE ----------------------------------------------------------------------------------------------
+        #region EnrollsDatabaseFunctions
+        private async Task<List<Enroll>> SelectEnroll(string sql, List<MySqlParameter> parms) // gets all of the classes from the database.
+        {
+            List<Enroll> allEnrolls = new(); // makes a list of Pet
+            using var connection = new MySqlConnection(cs); // makes a new connection to the databse based on the "cs" string
+            await connection.OpenAsync(); // opens the connection to the database
+            using var command = new MySqlCommand(sql, connection);
+
+            if (parms != null) // adds the parameters from the other functions if there are any
+            {
+                command.Parameters.AddRange(parms.ToArray());
+            }
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                allEnrolls.Add(new Enroll() // adds the admin to the list
+                {
+                    enrollmentID = reader.GetInt32(0),
+                    enrollmentTimeStatus = reader.GetString(1),
+                    classID = reader.GetInt32(2),
+                    userID = reader.GetInt32(3)
+                });
+            }
+
+            return allEnrolls;
+        }
+
+        private async Task EnrollNoReturnSql(string sql, List<MySqlParameter> parms) // use for updates, inserts, deletes
+        {
+            List<Enroll> allEnrolls = new(); // makes list of shops
+            using var connection = new MySqlConnection(cs); // makes a new connection to the databse based on the "cs" string
+            await connection.OpenAsync();
+            using var command = new MySqlCommand(sql, connection);
+
+            if (parms != null) // adds the parameters from the other functions if there are any
+            {
+                command.Parameters.AddRange(parms.ToArray());
+            }
+
+            await command.ExecuteNonQueryAsync();
+
+        }
+
+        public async Task<List<Enroll>> GetAllEnrolls() // gets all of the shops from the database
+        {
+            string sql = "SELECT * FROM enrolls WHERE deleted != 'Y'"; // Using the correct column name
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            return await SelectEnroll(sql, parms);
+
+        }
+
+        public async Task<List<Enroll>> GetEnroll(int id)
+        {
+            string sql = $"SELECT * FROM enrolls WHERE enrollID = @id"; // the SQL query that is used to get the information from the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
+            return await SelectEnroll(sql, parms);
+        }
+
+        public async Task InsertEnroll(Enroll myEnroll) // inserts a new user into the database
+        {
+            string sql = "INSERT INTO enrolls (enrollID, classID, userID, petID) VALUES (@enrollID, @classID, @userID, @petID)"; // the SQL query that is used to insert the information into the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@enrollmentID", myEnroll.enrollmentID) { Value = myEnroll.enrollmentID }); // adds the userEmail to the list of parameters
+            parms.Add(new MySqlParameter("@classID", myEnroll.classID) { Value = myEnroll.classID }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@userID", myEnroll.userID) { Value = myEnroll.userID }); // adds the userName to the list of parameters
+            await EnrollNoReturnSql(sql, parms); // calls the UsersNoReturnSQL function to insert the user into the database
+        }
+
+        public async Task DeleteEnroll(int id) // deletes a shop from the database
+        {
+            string sql = "UPDATE enrolls SET deleted = 'Y' WHERE enrollID = @id"; // Using the correct column name
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
+            await EnrollNoReturnSql(sql, parms); // calls the EnrollNoReturnSql function to delete the enrollment from the database
+        }
+
+        public async Task UpdateEnroll(Enroll myEnroll, int id) // updates a shop in the database
+        {
+            string sql = "UPDATE enrolls SET enrollID = @enrollID, classID = @classID, userID = @userID"; // the SQL query that is used to update the information in the database
+            List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
+            parms.Add(new MySqlParameter("@enrollmentID", myEnroll.enrollmentID) { Value = myEnroll.enrollmentID }); // adds the userEmail to the list of parameters
+            parms.Add(new MySqlParameter("@classID", myEnroll.classID) { Value = myEnroll.classID }); // adds the userName to the list of parameters
+            parms.Add(new MySqlParameter("@userID", myEnroll.userID) { Value = myEnroll.userID }); // adds the userName to the list of parameters
+            await EnrollNoReturnSql(sql, parms); // calls the UsersNoReturnSql function to update the shop in the database
+        }
+        #endregion
+
+        // ENROLLMENT COUNT METHODS
+        #region EnrollmentCountMethods
+        public async Task<Dictionary<int, int>> GetEnrollmentCountsByClass()
+        {
+            Dictionary<int, int> enrollmentCounts = new Dictionary<int, int>();
+            
+            string sql = "SELECT classID, COUNT(*) as enrollmentCount FROM enrolls WHERE deleted != 'Y' GROUP BY classID";
+            List<MySqlParameter> parms = new();
+            
+            using var connection = new MySqlConnection(cs);
+            await connection.OpenAsync();
+            using var command = new MySqlCommand(sql, connection);
+            
+            if (parms != null)
+            {
+                command.Parameters.AddRange(parms.ToArray());
+            }
+            
+            using var reader = await command.ExecuteReaderAsync();
+            
+            while (await reader.ReadAsync())
+            {
+                int classID = reader.GetInt32(0);
+                int count = reader.GetInt32(1);
+                enrollmentCounts[classID] = count;
+            }
+            
+            return enrollmentCounts;
+        }
+        #endregion
     }
 }

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/kayamaevega/Desktop/mis 321/Group Project/MIS321-Group-Project/API/API.csproj": {}
+    "/Users/creightonfowler/Documents/MIS Programs/Spring2025/groupproject/MIS321-Group-Project/API/API.csproj": {}
   },
   "projects": {
-    "/Users/kayamaevega/Desktop/mis 321/Group Project/MIS321-Group-Project/API/API.csproj": {
+    "/Users/creightonfowler/Documents/MIS Programs/Spring2025/groupproject/MIS321-Group-Project/API/API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/kayamaevega/Desktop/mis 321/Group Project/MIS321-Group-Project/API/API.csproj",
+        "projectUniqueName": "/Users/creightonfowler/Documents/MIS Programs/Spring2025/groupproject/MIS321-Group-Project/API/API.csproj",
         "projectName": "API",
-        "projectPath": "/Users/kayamaevega/Desktop/mis 321/Group Project/MIS321-Group-Project/API/API.csproj",
-        "packagesPath": "/Users/kayamaevega/.nuget/packages/",
-        "outputPath": "/Users/kayamaevega/Desktop/mis 321/Group Project/MIS321-Group-Project/API/obj/",
+        "projectPath": "/Users/creightonfowler/Documents/MIS Programs/Spring2025/groupproject/MIS321-Group-Project/API/API.csproj",
+        "packagesPath": "/Users/creightonfowler/.nuget/packages/",
+        "outputPath": "/Users/creightonfowler/Documents/MIS Programs/Spring2025/groupproject/MIS321-Group-Project/API/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/kayamaevega/.nuget/NuGet/NuGet.Config"
+          "/Users/creightonfowler/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -71,7 +71,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.404/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
