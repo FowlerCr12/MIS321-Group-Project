@@ -780,7 +780,7 @@ namespace API.Databases
 
         public async Task<List<Enroll>> GetEnroll(int id)
         {
-            string sql = $"SELECT * FROM enrolls WHERE enrollID = @id"; // the SQL query that is used to get the information from the database
+            string sql = $"SELECT * FROM enrolls WHERE enrollmentID = @id"; // the SQL query that is used to get the information from the database
             List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
             parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
             return await SelectEnroll(sql, parms);
@@ -788,7 +788,7 @@ namespace API.Databases
 
         public async Task InsertEnroll(Enroll myEnroll) // inserts a new user into the database
         {
-            string sql = "INSERT INTO enrolls (enrollID, classID, userID, petID) VALUES (@enrollID, @classID, @userID, @petID)"; // the SQL query that is used to insert the information into the database
+            string sql = "INSERT INTO enrolls (enrollmentID, classID, userID) VALUES (@enrollmentID, @classID, @userID)"; // the SQL query that is used to insert the information into the database
             List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
             parms.Add(new MySqlParameter("@enrollmentID", myEnroll.enrollmentID) { Value = myEnroll.enrollmentID }); // adds the userEmail to the list of parameters
             parms.Add(new MySqlParameter("@classID", myEnroll.classID) { Value = myEnroll.classID }); // adds the userName to the list of parameters
@@ -798,7 +798,7 @@ namespace API.Databases
 
         public async Task DeleteEnroll(int id) // deletes a shop from the database
         {
-            string sql = "UPDATE enrolls SET deleted = 'Y' WHERE enrollID = @id"; // Using the correct column name
+            string sql = "UPDATE enrolls SET deleted = 'Y' WHERE enrollmentID = @id"; // Using the correct column name
             List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
             parms.Add(new MySqlParameter("@id", id) { Value = id }); // adds the id to the list of parameters
             await EnrollNoReturnSql(sql, parms); // calls the EnrollNoReturnSql function to delete the enrollment from the database
@@ -806,7 +806,7 @@ namespace API.Databases
 
         public async Task UpdateEnroll(Enroll myEnroll, int id) // updates a shop in the database
         {
-            string sql = "UPDATE enrolls SET enrollID = @enrollID, classID = @classID, userID = @userID"; // the SQL query that is used to update the information in the database
+            string sql = "UPDATE enrolls SET enrollmentID = @enrollmentID, classID = @classID, userID = @userID"; // the SQL query that is used to update the information in the database
             List<MySqlParameter> parms = new(); // makes the list of parameters that need to be added to the function
             parms.Add(new MySqlParameter("@enrollmentID", myEnroll.enrollmentID) { Value = myEnroll.enrollmentID }); // adds the userEmail to the list of parameters
             parms.Add(new MySqlParameter("@classID", myEnroll.classID) { Value = myEnroll.classID }); // adds the userName to the list of parameters
