@@ -10,7 +10,7 @@ namespace API.Models
         public int petAge { get; set; }
         public int petWeight { get; set; }
         public string? petBreed { get; set; }
-        public int userID { get; set; }
         public string? petMedConditions { get; set; }
+        public int userID { get; set; }
     }
 }
