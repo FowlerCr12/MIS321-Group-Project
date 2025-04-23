@@ -29,7 +29,6 @@ namespace API.Controllers
         [HttpPost] // adds a new class to the database
         public async Task Post([FromBody] Class value)
         {
-            Console.WriteLine(value.className);
             Database myDatabase = new();
             await myDatabase.InsertClass(value);
         }
@@ -41,13 +40,11 @@ namespace API.Controllers
         {
             Database myDatabase = new();
             await myDatabase.DeleteClass(id);
-            Console.WriteLine(id); // prints the id for denbugging purposes
         }
 
         [HttpPut("{id}")] // updates a class in the database
         public async Task Put(int id, [FromBody] Class value)
         {
-            Console.WriteLine(value.className); // prints the classname to the console for testing or debugging
             Database myDatabase = new();
             await myDatabase.UpdateClass(value, id); // updates the class in the database
         }

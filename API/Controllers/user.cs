@@ -9,47 +9,44 @@ namespace API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        // GET: api/<shops>
-        [HttpGet] // gets all of the shops from the database
+        // GET: api/<users>
+        [HttpGet] // gets all of the users from the database
         public async Task<List<User>> Get()
         {
             Database myDatabase = new();
             return await myDatabase.GetAllUsers();
         }
 
-        // GET: api/shops/id
-        [HttpGet("{id}")] // gets a shop from the database bu the id of the shop
+        // GET: api/users/id
+        [HttpGet("{id}")] // gets a user from the database bu the id of the user
         public async Task<User> Get(int id)
         {
             Database myDatabase = new();
             return (await myDatabase.GetUser(id)).FirstOrDefault();
         }
 
-        // POST api/<shops>
-        [HttpPost] // adds a new shop to the database
+        // POST api/<users>
+        [HttpPost] // adds a new user to the database
         public async Task Post([FromBody] User value)
         {
-            Console.WriteLine(value.userName);
             Database myDatabase = new();
             await myDatabase.InsertUser(value);
         }
 
 
-        // DELETE api/<shops>/5
-        [HttpDelete("{id}")] // deletes a shop from the database
+        // DELETE api/<users>/5
+        [HttpDelete("{id}")] // deletes a user from the database
         public async Task Delete(int id)
         {
             Database myDatabase = new();
             await myDatabase.DeleteUser(id);
-            Console.WriteLine(id); // prints the id for denbugging purposes
         }
 
-        [HttpPut("{id}")] // updates a shop in the database
+        [HttpPut("{id}")] // updates a user in the database
         public async Task Put(int id, [FromBody] User value)
         {
-            Console.WriteLine(value.userName); // prints the shopname to the console for testing or debugging
             Database myDatabase = new();
-            await myDatabase.UpdateUser(value, id); // updates the shop in the database
+            await myDatabase.UpdateUser(value, id); // updates the user in the database
         }
 
         [HttpPost("login")]

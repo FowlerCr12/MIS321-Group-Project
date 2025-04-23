@@ -11,47 +11,44 @@ namespace API.Controllers
 
     public class EnrollController : ControllerBase
     {
-        // GET: api/<shops>
-        [HttpGet] // gets all of the shops from the database
+        // GET: api/<enrolls>
+        [HttpGet] // gets all of the enrolls from the database
         public async Task<List<Enroll>> Get()
         {
             Database myDatabase = new();
             return await myDatabase.GetAllEnrolls();
         }
 
-        // GET: api/shops/id
-        [HttpGet("{id}")] // gets a shop from the database bu the id of the shop
+        // GET: api/enrolls/id
+        [HttpGet("{id}")] // gets a enroll from the database bu the id of the enroll
         public async Task<Enroll> Get(int id)
         {
             Database myDatabase = new();
             return (await myDatabase.GetEnroll(id)).FirstOrDefault();
         }
 
-        // POST api/<shops>
-        [HttpPost] // adds a new shop to the database
+        // POST api/<enrolls>
+        [HttpPost] // adds a new enroll to the database
         public async Task Post([FromBody] Enroll value)
         {
-            Console.WriteLine(value.userID);
             Database myDatabase = new();
             await myDatabase.InsertEnroll(value);
         }
 
 
-        // DELETE api/<shops>/5
-        [HttpDelete("{id}")] // deletes a shop from the database
+        // DELETE api/<enrolls>/5
+        [HttpDelete("{id}")] // deletes a enroll from the database
         public async Task Delete(int id)
         {
             Database myDatabase = new();
             await myDatabase.DeleteEnroll(id);
-            Console.WriteLine(id); // prints the id for denbugging purposes
         }
 
-        [HttpPut("{id}")] // updates a shop in the database
+        [HttpPut("{id}")] // updates a enroll in the database
         public async Task Put(int id, [FromBody] Enroll value)
         {
-            Console.WriteLine(value.userID); // prints the shopname to the console for testing or debugging
             Database myDatabase = new();
-            await myDatabase.UpdateEnroll(value, id); // updates the shop in the database
+            await myDatabase.UpdateEnroll(value, id); // updates the enroll in the database
         }
 
         // GET: api/enroll/counts

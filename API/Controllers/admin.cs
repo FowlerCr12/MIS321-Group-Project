@@ -31,7 +31,6 @@ namespace API.Controllers
         [HttpPost] // adds a new shop to the database
         public async Task Post([FromBody] Admin value)
         {
-            Console.WriteLine(value.adminName);
             Database myDatabase = new();
             await myDatabase.InsertAdmin(value);
         }
@@ -43,13 +42,11 @@ namespace API.Controllers
         {
             Database myDatabase = new();
             await myDatabase.DeleteAdmin(id);
-            Console.WriteLine(id); // prints the id for denbugging purposes
         }
 
         [HttpPut("{id}")] // updates a shop in the database
         public async Task Put(int id, [FromBody] Admin value)
         {
-            Console.WriteLine(value.adminName); // prints the shopname to the console for testing or debugging
             Database myDatabase = new();
             await myDatabase.UpdateAdmin(value, id); // updates the shop in the database
         }
@@ -61,11 +58,6 @@ namespace API.Controllers
             {
                 Database myDatabase = new(); // creates the database class
                 var admins = await myDatabase.GetAllAdmins(); // gets all of the admins from the database
-                for(int i = 0; i < admins.Count; i++)
-                {
-                    Console.WriteLine("Test admin test");
-                    Console.WriteLine(admins[i].adminName);
-                }
                 Admin admin = null;
                 for(int i = 0; i < admins.Count; i++) // loops thorugh the array of users to find if any of them match the provided email and password in the login form. 
                 {
@@ -93,7 +85,6 @@ namespace API.Controllers
                     success = false,
                     message = "Invalid email or password"
                 });
-                
             }
             catch (Exception ex)
             {
