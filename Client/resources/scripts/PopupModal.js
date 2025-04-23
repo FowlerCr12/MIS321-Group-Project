@@ -32,20 +32,29 @@ class PopupModal {
         modalTitle.textContent = this.title
 
         // Add color class based on type
-        switch(this.type) {
+        let headerClass = '';
+        let buttonClass = '';
+        
+        switch(this.type) { // switches the color of the modal and button based on the type
             case 'error':
-                modalHeader.classList.add('bg-danger', 'text-white')
-                break
+                headerClass = 'bg-danger text-white';
+                buttonClass = 'btn btn-danger';
+                break;
             case 'success':
-                modalHeader.classList.add('bg-success', 'text-white')
-                break
+                headerClass = 'bg-success text-white';
+                buttonClass = 'btn btn-success';
+                break;
             case 'warning':
-                modalHeader.classList.add('bg-warning')
-                break
+                headerClass = 'bg-warning';
+                buttonClass = 'btn btn-warning';
+                break;
             default:
-                modalHeader.classList.add('bg-primary', 'text-white')
+                headerClass = 'bg-primary text-white';
+                buttonClass = 'btn btn-primary';
         }
-
+        
+        modalHeader.classList.add(...headerClass.split(' '));
+        
         const closeButton = document.createElement('button')
         closeButton.type = 'button'
         closeButton.className = 'btn-close'
@@ -64,7 +73,7 @@ class PopupModal {
         
         const okButton = document.createElement('button')
         okButton.type = 'button'
-        switch(this.type) {
+        switch(this.type) { // switches the color of the button based on the type of modal it is set to basically the same thing as the above switch statement but just for the button. 
             case 'error':
                 okButton.className = 'btn btn-danger'
                 break
@@ -93,7 +102,7 @@ class PopupModal {
     }
 
     show(message) { // function for displaying the message.
-        const modalBody = document.getElementById(`${this.modalId}Body`)
+        const modalBody = document.getElementById(`${this.modalId}Body`) // gets the actual body of each modal
         modalBody.textContent = message
         const modal = new bootstrap.Modal(document.getElementById(this.modalId))
         modal.show()

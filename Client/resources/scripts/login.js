@@ -21,7 +21,7 @@ function createLoginForm() {
     card.classList.add('card', 'p-3') 
     container.appendChild(card)
 
-    //create the login card in the center of the page.
+    //makes the login card in the center of the page.
     let cardBody = document.createElement('div')
     cardBody.classList.add('card-body')
     card.appendChild(cardBody)
@@ -40,7 +40,7 @@ function createLoginForm() {
     loginFormGroup.classList.add('form-group')
     loginForm.appendChild(loginFormGroup)
 
-    // create the Enter email input field
+    // makes the email input field
     let emailInput = document.createElement('input')
     emailInput.type = 'email'
     emailInput.id = 'emailInput'
@@ -48,7 +48,7 @@ function createLoginForm() {
     emailInput.placeholder = 'Email'
     loginFormGroup.appendChild(emailInput)
 
-    // create the Enter password input field
+    // makes the password input field
     let passwordInput = document.createElement('input')
     passwordInput.type = 'password'
     passwordInput.id = 'passwordInput'
@@ -56,7 +56,7 @@ function createLoginForm() {
     passwordInput.placeholder = 'Password'
     loginFormGroup.appendChild(passwordInput)
 
-    // create the Login button
+    // makes the login button 
     let loginButton = document.createElement('button')
     loginButton.type = 'submit'
     loginButton.id = 'loginButton'
@@ -87,15 +87,12 @@ async function handleLogin(e) {
         const data = await response.json()
 
         if (data.success) {
-            // Store user data in localStorage
-            localStorage.setItem('user', JSON.stringify(data.user))
-            // Redirect to home page
-            window.location.href = './home.html'
+            localStorage.setItem('user', JSON.stringify(data.user)) // stores the user data in the local storage to be accessed later
+            window.location.href = './schedule.html' // redirects to the schedule page 
         } else {
             errorModal.show('Invalid email or password')
         }
     } catch (error) {
-        console.error('Error:', error)
         errorModal.show('An error occurred while logging in')
     }
 }

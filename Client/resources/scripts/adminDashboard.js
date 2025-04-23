@@ -89,12 +89,10 @@ document.addEventListener("DOMContentLoaded", () => {
     {
         modal = bootstrap.Modal.getInstance(document.getElementById('addClassModal'))
         
-        // Format the date to match the database format (YYYY-MM-DD)
-        const dateValue = document.getElementById('classDate').value;
+        const dateValue = document.getElementById('classDate').value; // changes date to match the databases format
         
-        // Format the time to match the database format (HH:MM:SS)
-        const timeValue = document.getElementById('classTime').value;
-        const formattedTime = timeValue + ":00"; // Add seconds to match HH:MM:SS format
+        const timeValue = document.getElementById('classTime').value; // changes time to match the databases format
+        const formattedTime = timeValue + ":00"; // Add seconds to match HH:MM:SS format 
         
         const classInfo = 
         {
@@ -224,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                    min="09:30" 
                                    max="16:00" 
                                    required>
-                            <small class="form-text">Available times: 9:30 AM to 4:00 PM, in 30-minute intervals</small>
+                            <small class="form-text">Available times: 9:30 AM to 4:00 PM, in 30 minute intervals</small>
                         </div>
                         <div class="mb-3">
                             <label for="classCapacity" class="form-label">Class Capacity</label>
@@ -306,19 +304,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const timeSlots = ["09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "01:00 PM", "1:30 PM", "2:00 PM", "02:30 PM", "3:00 PM", "3:30 PM", "04:00 PM"]
 
     async function fetchTrainerRequests() {
-      try {
-        const response = await fetch('http://localhost:5043/api/TrainerRequests/pending');
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        console.error('Error fetching trainer requests:', error);
-        return [];
+      const response = await fetch('http://localhost:5043/api/TrainerRequests/pending');
+      
+      if (response.ok === false) {
+        modal = new PopupModal(
+          {
+            title: 'Error',
+            type: 'error',
+            modalId: 'trainerRequestsLoadError'
+          }
+        )
+        modal.show('Failed to fetch trainer requests. Please try again later.');
+        return []; // returns an empty array if the request fails so everything doesnt blow up
       }
+      const data = await response.json();
+      return data;
     }
 
     function buildTrainerRequestTable(requests) {
@@ -330,7 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <tr>
                 <th>Request ID</th>
                 <th>Trainer ID</th>
-                <th>Class Type</th>
+                <th>Class ID</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
@@ -350,7 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <tr>
                 <td>${request.requestID}</td>
                 <td>${request.trainerID}</td>
-                <td>${request.requestClassType}</td>
+                <td>${request.classID}</td>
                 <td>${request.requestStatus}</td>
                 <td>
                   <div class="d-flex justify-content-center gap-2">
@@ -405,7 +405,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <th class="time-column">Time</th>
     `
 
-    for (let index = 0; index < days.length; index++) {
+    for (let index = 0; index < days.length; index++) { // builds the days of the week and the date for the headers
         const date = new Date(startDate)
         date.setDate(startDate.getDate() + index)
         tableHTML += `<th>${days[index]}<br>${date.getMonth() + 1}/${date.getDate()}</th>`
@@ -417,8 +417,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <tbody>
     `;
 
-    // Builds the rows for each time slot
-    for (let i = 0; i < timeSlots.length; i++) {
+    for (let i = 0; i < timeSlots.length; i++) { // builds the rows for each time slot
         const time = timeSlots[i]
         tableHTML += `
             <tr>
@@ -444,7 +443,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadTrainerRequests();
 
-    function reformatTimeInformation(timeSpan) {
+    function reformatTimeInformation(timeSpan) { //reformats the time to be displayed in the schedule
         [hours, minutes] = timeSpan.split(':')
         hour = parseInt(hours)
         if (hour >= 12) {
@@ -460,25 +459,25 @@ document.addEventListener("DOMContentLoaded", () => {
         return `${hourFormatTwelve.toString()}:${minutes} ${amOrPm}`
     }
 
-    fetch("http://localhost:5043/api/Classes")
-        .then(res => res.json())
-        .then(data => {
-            data.forEach((session, index) => {
+    fetch("http://localhost:5043/api/Classes") // fetches the classes from the database
+        .then(res => res.json()) // converts the api response to json
+        .then(data => { // goes through each class that is parsed from the api
+            data.forEach((session, index) => { // goes through each class in the data
                 const classDate = new Date(session.classDate);
 
                 if (classDate >= startDate && classDate <= endDate) {
-                    const weekday = classDate.toLocaleDateString("en-US", { weekday: "long" })
-                    const timeValue = reformatTimeInformation(session.classTime)
-                    const cellId = `${weekday}_${timeValue.replace(":", "").replace(" ", "")}`
-                    const cell = document.getElementById(cellId)
+                    const weekday = classDate.toLocaleDateString("en-US", { weekday: "long" }) // gets the current day of the week
+                    const timeValue = reformatTimeInformation(session.classTime) // reformats the time to be displayed in the schedule by calling the function that does so
+                    const cellId = `${weekday}_${timeValue.replace(":", "").replace(" ", "")}` // creates the id for the cell
+                    const cell = document.getElementById(cellId) // gets the actuall cell
 
-                    if (cell) {
+                    if (cell) { // if the cell exists
                         cell.innerHTML = `
                             <div class="p-2 rounded text-white bg-primary mb-1" style="font-size: 14px;">
                                 ${session.className}
                                 <br><small>${session.classType}</small>
                             </div>
-                            <button class="btn btn-sm btn-outline-dark view-info-btn" data-index="${index}" data-class-id="${session.classId}">
+                            <button class="btn btn-sm btn-outline-dark view-info-btn" data-index="${index}" classId="${session.classId}">
                                 View Info
                             </button>
                         `
@@ -486,20 +485,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-            document.querySelectorAll(".view-info-btn").forEach(button => {
-                button.addEventListener("click", (e) => {
-                    const session = data[e.target.getAttribute("data-index")]
-                    document.getElementById("infoModalLabel").innerText = session.className
-                    document.getElementById("modalTrainer").innerText = session.classType
-                    document.getElementById("modalDate").innerText = new Date(session.classDate).toDateString()
-                    document.getElementById("modalTime").innerText = reformatTimeInformation(session.classTime)
-                    document.getElementById("modalCapacity").innerText = session.classCapacity
-                    const modal = new bootstrap.Modal(document.getElementById("infoModal"))
+            document.querySelectorAll(".view-info-btn").forEach(button => { // goes through each button in the schedule
+                button.addEventListener("click", (e) => { // when the button is clicked
+                    const session = data[e.target.getAttribute("data-index")] // gets the class data from the button
+                    document.getElementById("infoModalLabel").innerText = session.className // sets the modal title to the class name
+                    document.getElementById("infoModal").setAttribute("classId", session.classID) // sets the class id for the modal
+                    document.getElementById("modalTrainer").innerText = session.classType // sets the trainer name for the modal
+                    document.getElementById("modalDate").innerText = new Date(session.classDate).toDateString() // sets the date for the modal
+                    document.getElementById("modalTime").innerText = reformatTimeInformation(session.classTime) // sets the time for the modal
+                    document.getElementById("modalCapacity").innerText = session.classCapacity // sets the capacity for the modal
+                    const modal = new bootstrap.Modal(document.getElementById("infoModal")) // shows the modal
                     modal.show()
                 })
             })
         })
-        .catch(err => {
+        .catch(err => { // similar to try catch, if the fetch fails then the error is caught and displayed in a popup modal. Had to google this one so don't ask me how it works....
             console.error("Failed to load schedule", err)
             errorModal = new PopupModal({
                 title: 'Error',
@@ -508,12 +508,134 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             errorModal.show('The schedule failed to load. Please try again later.');
         })
-    document.getElementById('editClassBtn').addEventListener('click', handleEditClass);
-    document.getElementById('deleteClassBtn').addEventListener('click', handleDeleteClass);
+    document.getElementById('editClassBtn').addEventListener('click', handleEditClass); // when the edit button is clicked, the handleEditClass function is called
+    document.getElementById('deleteClassBtn').addEventListener('click', handleDeleteClass); // when the delete button is clicked, the handleDeleteClass function is called
+
+    // Create edit class modal
+    const editClassModal = document.createElement("div")
+    editClassModal.className = "modal fade"
+    editClassModal.id = "editClassModal"
+    
+    editClassModal.innerHTML = `
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editClassModalLabel">Edit Class</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editClassForm">
+                        <div class="mb-3">
+                            <label for="editClassName" class="form-label">Class Name</label>
+                            <input type="text" class="form-control" id="editClassName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editClassType" class="form-label">Class Type</label>
+                            <input type="text" class="form-control" id="editClassType" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editClassDate" class="form-label">Class Date</label>
+                            <input type="date" class="form-control" id="editClassDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editClassTime" class="form-label">Time</label>
+                            <input type="time" class="form-control" id="editClassTime" 
+                                   step="1800"
+                                   min="09:30" 
+                                   max="16:00" 
+                                   required>
+                            <small class="form-text">Available times: 9:30 AM to 4:00 PM, in 30-minute intervals</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editClassCapacity" class="form-label">Class Capacity</label>
+                            <input type="number" class="form-control" id="editClassCapacity" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" id="saveEditClassBtn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    `
+
+    document.body.appendChild(editClassModal)
+
+    async function handleEditClass() {
+        const classId = document.getElementById("infoModal").getAttribute("class-id"); // gets the class id from the info modal
+        const infoModal = bootstrap.Modal.getInstance(document.getElementById("infoModal")); // hides the info modal
+        infoModal.hide();
+
+
+        const response = await fetch(`http://localhost:5043/api/classes/${classId}`); // get's current class data into the edit modal
+        if (!response.ok) { // if the response is not ok then the error is displayed in a popup modal
+            addUserError.show('Failed to fetch class data');
+            return;
+        }
+
+        const classData = await response.json();
+        
+        const classDate = new Date(classData.classDate); // format the date to be displayed cause it needs yyyy-mm-dd
+        const formattedDate = classDate.toISOString().split('T')[0];
+        
+
+        const formattedTime = classData.classTime.substring(0, 5); // removes seconds from the time so time window can be displayed correctly. 
+        
+        // gets the edit form to show current data
+        document.getElementById("editClassName").value = classData.className; // sets the class name for the edit modal
+        document.getElementById("editClassType").value = classData.classType; // sets the class type for the edit modal
+        document.getElementById("editClassDate").value = formattedDate; // sets the date for the edit modal
+        document.getElementById("editClassTime").value = formattedTime; // sets the time for the edit modal
+        document.getElementById("editClassCapacity").value = classData.classCapacity; // sets the capacity for the edit modal
+        
+        document.getElementById("editClassModal").setAttribute("classId", classId); // sets the class id for the edit modal
+        
+        const editModal = new bootstrap.Modal(document.getElementById("editClassModal")); // shows the edit modal
+        editModal.show();
+    }
+
+    document.getElementById('saveEditClassBtn').addEventListener('click', async () => { // when the save button is clicked
+        const classId = document.getElementById("editClassModal").getAttribute("classId");
+        const editModal = bootstrap.Modal.getInstance(document.getElementById("editClassModal"));
+        
+        const timeValue = document.getElementById('editClassTime').value; // gets the time value from the edit modal
+        const formattedTime = timeValue + ":00"; // formats the time to match the database format (HH:MM:SS)
+        
+        const dateValue = document.getElementById('editClassDate').value; // gets the date value from the edit modal
+        
+        const updatedClass = { // creates the updated class object which can be sent to the database,
+            classID: parseInt(classId),
+            className: document.getElementById('editClassName').value,
+            classType: document.getElementById('editClassType').value,
+            classDate: dateValue,
+            classTime: formattedTime,
+            classCapacity: parseInt(document.getElementById('editClassCapacity').value)
+        };
+
+        const response = await fetch(`http://localhost:5043/api/classes/${classId}`, { // sends the updated class object to the database
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify(updatedClass)
+        });
+
+        if (response.ok) { // if the response is ok then the class is updated successfully
+            editModal.hide();
+            addUserSuccess.show('Class updated successfully');
+            window.location.reload(); // refreshes page to show updated data
+        } else {
+            editModal.hide();
+            addUserError.show('Failed to update class');
+        }
+    });
 });
 
 async function approveRequest(requestID) { //handling approve request 
   try {
+    console.log(`Approving request with ID: ${requestID}`);
+    
     const response = await fetch(`http://localhost:5043/api/TrainerRequests/approve/${requestID}`, {
       method: 'PUT',
       headers: {
@@ -521,8 +643,17 @@ async function approveRequest(requestID) { //handling approve request
       }
     });
     
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+    const data = await response.json();
+    
+    if (!response.ok) { // if the response is not ok then the error is displayed in a popup modal
+      errorModal = new PopupModal(
+        {
+          title: 'Error',
+          type: 'Error',
+          modalId: 'approveRequestError'
+        }
+      )
+      errorModal.show('Failed to approve request. Please try again later.');
     }
     
     const successModal = new PopupModal({
@@ -530,8 +661,9 @@ async function approveRequest(requestID) { //handling approve request
       type: 'success',
       modalId: 'approveRequestSuccess'
     });
-    successModal.show(`Request ${requestID} has been approved!`);
+    successModal.show(`Request ${requestID} has been approved!`); // shows the success modal
     
+    // Refresh the trainer requests list
     loadTrainerRequests();
   } catch (error) {
     console.error('Error approving request:', error);
@@ -540,7 +672,7 @@ async function approveRequest(requestID) { //handling approve request
       type: 'error',
       modalId: 'approveRequestError'
     });
-    errorModal.show('Failed to approve request. Please try again later.');
+    errorModal.show(`Failed to approve request: ${error.message}`); // error.message is just the error message that comes from the error object
   }
 }
 
@@ -553,8 +685,15 @@ async function denyRequest(requestID) { //handling deny request
         }
       });
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+      if (!response.ok) { // if the response is not ok then the error is displayed in a popup modal
+        errorModal = new PopupModal(
+          {
+            title: 'Error',
+            type: 'Error',
+            modalId: 'denyRequestError'
+          }
+        )
+        errorModal.show('Failed to deny request. Please try again later.');
       }
       
       const successModal = new PopupModal({
@@ -562,7 +701,7 @@ async function denyRequest(requestID) { //handling deny request
         type: 'success',
         modalId: 'approveRequestSuccess'
       });
-      successModal.show(`Request ${requestID} has been denied!`);
+      successModal.show(`Request ${requestID} has been denied!`); // shows the success modal
       
       loadTrainerRequests();
     } catch (error) {
@@ -572,13 +711,9 @@ async function denyRequest(requestID) { //handling deny request
         type: 'error',
         modalId: 'denyRequestError'
       });
-      errorModal.show('Failed to deny request. Please try again later.');
+      errorModal.show('Failed to deny request. Please try again later.'); // error.message is just the error message that comes from the error object
     }
   }
-
-async function handleEditClass(classId) {
-    console.log("Edit class button clicked")
-}
 
 async function handleDeleteClass(classId) {
     console.log("Delete class button clicked")
@@ -589,8 +724,15 @@ function loadTrainerRequests() {  // load pending trainer requests
   if (requestTableContainer) {
     fetch('http://localhost:5043/api/TrainerRequests/pending')
       .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+        if (!response.ok) { // if the response is not ok then the error is displayed in a popup modal
+          errorModal = new PopupModal(
+            {
+              title: 'Error',
+              type: 'Error',
+              modalId: 'loadTrainerRequestsError'
+            }
+          )
+          errorModal.show('Failed to load trainer requests. Please try again later.');
         }
         return response.json();
       })
@@ -611,7 +753,7 @@ function loadTrainerRequests() {  // load pending trainer requests
             <tbody>
         `;
         
-        if (!data || data.length === 0) {
+        if (!data || data.length === 0) { // if the data is not ok then the error is displayed in a popup modal
           requestTableHTML += `
             <tr>
               <td colspan="5">No pending trainer requests</td>

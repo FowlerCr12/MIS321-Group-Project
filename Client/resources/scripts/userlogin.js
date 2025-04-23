@@ -81,7 +81,7 @@ async function handleLogin(e) {
     }
 
     try {
-        const response = await fetch('http://localhost:5043/api/users/login', {
+        const response = await fetch('http://localhost:5043/api/users/login', { // sends the login request to the correct api
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -91,7 +91,6 @@ async function handleLogin(e) {
 
 
         const data = await response.json()
-        console.log('Login response:', data)
 
         if (data.success) {
             localStorage.setItem('user', JSON.stringify(data.user))
@@ -100,7 +99,6 @@ async function handleLogin(e) {
             errorModal.show('Invalid email or password')
         }
     } catch (error) {
-        console.error('Error:', error)
         errorModal.show(`An error occurred while logging in: ${error.message}`)
     }
 }

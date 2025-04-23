@@ -79,7 +79,7 @@ function createLoginForm() {
     loginButton.textContent = 'Login'
     loginFormGroup.appendChild(loginButton)
 
-    // Add event listener to the form instead of just the button
+    // event listener for the login form to handle the login
     loginForm.addEventListener('submit', handleLogin)
 }
 
@@ -87,29 +87,29 @@ function createLoginForm() {
 async function handleLogin(e) {
     e.preventDefault()
 
-    const email = document.getElementById('emailInput').value
-    const password = document.getElementById('passwordInput').value
-    const accountType = document.getElementById('accountTypeSelect').value
-
+    const email = document.getElementById('emailInput').value // gets the email from the input field
+    const password = document.getElementById('passwordInput').value // gets the password from the input field
+    const accountType = document.getElementById('accountTypeSelect').value // gets the account type from the dropdown menu which correctly routes the login to the correct api
+    // url statements handle login to the correct api
     if(accountType === 'admin')
     {
-        url = 'http://localhost:5043/api/admins/login'
-        hrefLink = './adminDashboard.html'
+        url = 'http://localhost:5043/api/admins/login' // sets url to the correct endpoint
+        hrefLink = './adminDashboard.html' // sets the redirect link to the admin dashboard
     }
     else
     {
-        url = 'http://localhost:5043/api/trainers/login'
-        hrefLink = './trainerDashboard.html'
+        url = 'http://localhost:5043/api/trainers/login' // sets url to the correct endpoint
+        hrefLink = './trainerDashboard.html' // sets the redirect link to the trainer dashboard
     }
 
-    if(email === null || password === null)
+    if(email === null || password === null) // if the email or password is not entered then the error modal is shown
     {
         errorModal.show('Please enter both email and password')
         return
     }
 
     try {
-        const response = await fetch(url, {
+        const response = await fetch(url, { // gets correct url from if statements then sends to the correct api.
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -121,17 +121,15 @@ async function handleLogin(e) {
 
         if (data.success) {
             // Check if data.user exists and is not undefined
-            if (data.user)
+            if (data.user) 
             {
-                localStorage.setItem('user', JSON.stringify(data.user))
-                console.log(data.user)
+                localStorage.setItem('user', JSON.stringify(data.user)) // sets the user to the local storage
             }
-            window.location.href = hrefLink
+            window.location.href = hrefLink // redirects to the correct dashboard based on account type from if statements above
         } else {
-            errorModal.show(data.message || 'Login failed. Please check your credentials.')
+            errorModal.show(data.message || 'Login failed. Please check your credentials.') // shows the error modal
         }
     } catch (error) {
-        console.error('Error:', error)
-        errorModal.show(`An error occurred while logging in: ${error.message}`)
+        errorModal.show(`An error occurred while logging in: ${error.message}`) // shows the error modal with the actual error message. 
     }
 }
