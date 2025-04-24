@@ -70,3 +70,5 @@
 /Users/kayamaevega/Desktop/mis 321/Group Project/MIS321-Group-Project/API/obj/Debug/net8.0/API.csproj.Up2Date
 /Users/kayamaevega/Desktop/mis 321/Group Project/MIS321-Group-Project/API/obj/Debug/net8.0/API.genruntimeconfig.cache
 /Users/kayamaevega/Desktop/mis 321/Group Project/MIS321-Group-Project/API/obj/Debug/net8.0/ref/API.dll
+/Users/creightonfowler/Documents/MIS Programs/Spring2025/groupproject/MIS321-Group-Project/API/bin/Debug/net8.0/DotNetEnv.dll
+/Users/creightonfowler/Documents/MIS Programs/Spring2025/groupproject/MIS321-Group-Project/API/bin/Debug/net8.0/Sprache.dll

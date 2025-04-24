@@ -12,8 +12,13 @@ namespace API.Databases
 
         public Database()
         {
-            cs = "Server=lgg2gx1ha7yp2w0k.cbetxkdyhwsb.us-east-1.rds.amazonaws.com;User ID=wnh64lk32rq36af5;Database=gfpku6ep7udf4m7m;Port=3306;Password=heinlafs5cyqs6wu";
-
+            // Get database connection information from environment variables
+            string server = Environment.GetEnvironmentVariable("DB_SERVER");
+            string user = Environment.GetEnvironmentVariable("DB_USER");
+            string database = Environment.GetEnvironmentVariable("DB_NAME");
+            string port = Environment.GetEnvironmentVariable("DB_PORT");
+            string password = Environment.GetEnvironmentVariable("DB_PASSWORD");
+            cs = $"Server={server};User ID={user};Database={database};Port={port};Password={password}";
         }
 #region UserDatabaseFunctions
         private async Task<List<User>> SelectUsers(string sql, List<MySqlParameter> parms) // gets all of the users from the database.
@@ -175,13 +180,14 @@ namespace API.Databases
 
         public async Task InsertClass(Class myClass)
         {
-            string sql = "INSERT INTO class (classTime, classDate, classType, className, classCapacity) VALUES (@classTime, @classDate, @classType, @className, @classCapacity)";
+            string sql = "INSERT INTO class (classTime, classDate, classType, className, classCapacity, classAllowedPetTypes) VALUES (@classTime, @classDate, @classType, @className, @classCapacity, @classAllowedPetTypes)";
             List<MySqlParameter> parms = new(); 
             parms.Add(new MySqlParameter("@classTime", myClass.classTime) { Value = myClass.classTime }); 
             parms.Add(new MySqlParameter("@classDate", myClass.classDate) { Value = myClass.classDate }); 
             parms.Add(new MySqlParameter("@classType", myClass.classType) { Value = myClass.classType });
             parms.Add(new MySqlParameter("@className", myClass.className) { Value = myClass.className });
             parms.Add(new MySqlParameter("@classCapacity", myClass.classCapacity) { Value = myClass.classCapacity });
+            parms.Add(new MySqlParameter("@classAllowedPetTypes", myClass.classAllowedPetTypes) { Value = myClass.classAllowedPetTypes });
             await ClassesNoReturnSql(sql, parms);
         }
 
@@ -363,11 +369,12 @@ namespace API.Databases
 
         public async Task InsertTrainer(Trainer myTrainer) // inserts a new trainer into the database
         {
-            string sql = "INSERT INTO trainer (trainerEmail, trainerName, trainerPassword) VALUES (@trainerEmail, @trainerName, @trainerPassword)"; 
+            string sql = "INSERT INTO trainer (trainerEmail, trainerName, trainerPassword, trainerSpecialization) VALUES (@trainerEmail, @trainerName, @trainerPassword, @trainerSpecialization)"; 
             List<MySqlParameter> parms = new(); 
             parms.Add(new MySqlParameter("@trainerEmail", myTrainer.trainerEmail) { Value = myTrainer.trainerEmail }); 
             parms.Add(new MySqlParameter("@trainerName", myTrainer.trainerName) { Value = myTrainer.trainerName }); 
-            parms.Add(new MySqlParameter("@trainerPassword", myTrainer.trainerPassword) { Value = myTrainer.trainerPassword }); 
+            parms.Add(new MySqlParameter("@trainerPassword", myTrainer.trainerPassword) { Value = myTrainer.trainerPassword });
+            parms.Add(new MySqlParameter("@trainerSpecialization", myTrainer.trainerSpecialization) { Value = myTrainer.trainerSpecialization });
             await TrainersNoReturnSql(sql, parms); 
         }
 
