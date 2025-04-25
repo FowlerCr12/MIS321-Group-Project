@@ -193,7 +193,7 @@ namespace API.Databases
 
         public async Task DeleteClass(int id) // deletes a class from the database
         {
-            string sql = "UPDATE class SET deleted = 'Y' WHERE id = @id";
+            string sql = "UPDATE class SET deleted = 'Y' WHERE classID = @id";
             List<MySqlParameter> parms = new();
             parms.Add(new MySqlParameter("@id", id) { Value = id });
             await ClassesNoReturnSql(sql, parms);
